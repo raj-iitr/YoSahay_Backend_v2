@@ -274,8 +274,8 @@ if not all([ACCESS_TOKEN, VERIFY_TOKEN, PHONE_NUMBER_ID]):
 
 # --- Centralized Database and App Initialization ---
 # Create the DB objects here, only once.
-# client = chromadb.Client()
-client = chromadb.PersistentClient(path="./chroma_data")
+client = chromadb.Client()
+# client = chromadb.PersistentClient(path="./chroma_data")
 collection = client.get_or_create_collection(name="schemes")
 
 
