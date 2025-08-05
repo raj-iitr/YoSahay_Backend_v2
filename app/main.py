@@ -327,6 +327,9 @@ async def handle_webhook(request: Request):
                 normalized_query = user_text.lower()
 
                 logger.info(f"Processing message from {user_phone}: '{user_text}'")
+    
+      # <<<--- METRIC 1: Track every message received from a unique user ---
+                logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
 
                 # --- CACHE LOGIC START ---
                 if normalized_query in query_cache:
@@ -352,6 +355,14 @@ async def handle_webhook(request: Request):
                 query_vector = embed_text(user_text)
                 results = search_chunks(collection, query_vector, lang=lang, top_k=num_chunks)
                 chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
+                
+                if chunks:
+                    top_scheme_source = results['metadatas'][0][0].get('source', 'unknown')
+                    logger.info(f"[METRIC] Type=CONTEXT_FOUND, UserID={user_phone}, TopScheme='{top_scheme_source}', Query='{user_text}'")
+                else:
+                    # We found NO relevant context. This is a "failure" of our knowledge base.
+                    logger.warning(f"[METRIC] Type=NO_CONTEXT_FOUND, UserID={user_phone}, Query='{user_text}'")
+                
                 
                 reply = generate_response(user_text, chunks, lang)
                 
