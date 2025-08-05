@@ -242,9 +242,6 @@
 #     return 
 
 
-
-# app/main.py
-# app/main.py
 # app/main.py
 
 import os
@@ -274,10 +271,9 @@ if not all([ACCESS_TOKEN, VERIFY_TOKEN, PHONE_NUMBER_ID]):
     logger.critical("FATAL: Environment variables not configured correctly.")
 
 # --- Centralized Database, Cache, and App Initialization ---
-client = chromadb.Client()
+client = chromadb.Client()  # Correct in-memory client for deployment
 collection = client.get_or_create_collection(name="schemes")
-# The new semantic cache stores: chunk_id -> generated_response
-semantic_query_cache = {}
+query_cache = {}  # In-memory cache
 app = FastAPI()
 
 # --- Startup Event ---
@@ -328,39 +324,41 @@ async def handle_webhook(request: Request):
             if message_data.get("type") == "text":
                 user_phone = message_data["from"]
                 user_text = message_data["text"]["body"].strip()
+                normalized_query = user_text.lower()
+
                 logger.info(f"Processing message from {user_phone}: '{user_text}'")
 
-                # --- SEMANTIC CACHING WORKFLOW ---
-                # 1. Always perform embedding and a quick search to find the user's intent
-                lang = detect_lang(user_text)
-                query_vector = embed_text(user_text)
-                # Search for only the top 1 result to identify the primary intent
-                intent_results = search_chunks(collection, query_vector, lang=lang, top_k=1)
-                
-                # 2. Use the ID of the top document chunk as the cache key
-                top_chunk_id = intent_results['ids'][0][0] if intent_results.get('ids') and intent_results['ids'][0] else None
-
-                # 3. Check the cache using this semantic key
-                if top_chunk_id and top_chunk_id in semantic_query_cache:
-                    cached_reply = semantic_query_cache[top_chunk_id]
-                    logger.info(f"[ANALYTICS] Type=SEMANTIC_CACHE_HIT, ChunkID='{top_chunk_id}'")
+                # --- CACHE LOGIC START ---
+                if normalized_query in query_cache:
+                    cached_reply = query_cache[normalized_query]
+                    logger.info(f"[ANALYTICS] Type=CACHE_HIT, Query='{normalized_query}'")
                     await send_whatsapp_message(user_phone, cached_reply)
                     return Response(status_code=200)
+                # --- CACHE LOGIC END ---
 
-                # 4. If here, it's a CACHE MISS. Generate a new response.
-                logger.info(f"[ANALYTICS] Type=SEMANTIC_CACHE_MISS, Query='{user_text}'")
+                # If we are here, it's a CACHE MISS. We need to call the AI.
+                logger.info(f"[ANALYTICS] Type=CACHE_MISS, Query='{normalized_query}'")
+
+                # === YOUR CORE LOGIC EXECUTES HERE ===
+                lang = detect_lang(user_text)
+                logger.info(f"Detected language: {lang}")
+
+                # Simple logic to adjust context size
+                if len(user_text.split()) < 5:
+                    num_chunks = 2
+                else:
+                    num_chunks = 3
+
+                query_vector = embed_text(user_text)
+                results = search_chunks(collection, query_vector, lang=lang, top_k=num_chunks)
+                chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
                 
-                # 5. Get a richer context for a better answer (can use more chunks)
-                num_chunks = 3
-                full_context_results = search_chunks(collection, query_vector, lang=lang, top_k=num_chunks)
-                chunks = full_context_results['documents'][0] if full_context_results.get('documents') and full_context_results['documents'] else []
-
                 reply = generate_response(user_text, chunks, lang)
                 
-                # 6. Save the newly generated reply to the cache
-                if top_chunk_id:
-                    semantic_query_cache[top_chunk_id] = reply
-                
+                # --- SAVE TO CACHE ---
+                query_cache[normalized_query] = reply
+                # ---------------------
+
                 await send_whatsapp_message(user_phone, reply)
 
     except Exception as e:
@@ -372,13 +370,11 @@ async def handle_webhook(request: Request):
 def health_check():
     try:
         item_count = collection.count()
-        cache_size = len(semantic_query_cache)
         return {
             "status": "ok",
             "message": "Server is running.",
             "chromadb_collection_name": collection.name,
             "items_in_collection": item_count,
-            "items_in_cache": cache_size
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
