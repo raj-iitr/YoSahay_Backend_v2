@@ -2,7 +2,11 @@ import chromadb
 from chromadb.api.models.Collection import Collection
 
 # Persistent client to share data across scripts
-chroma_client = chromadb.PersistentClient(path="./chroma_data")
+# chroma_client = chromadb.PersistentClient(path="./chroma_data")
+
+# THIS IS THE NEW, CORRECT CODE FOR DEPLOYMENT
+client = chromadb.Client() 
+
 collection: Collection = chroma_client.get_or_create_collection(name="schemes")
 
 def add_scheme_chunk(id, text, embedding, scheme_id, lang):
