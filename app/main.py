@@ -274,8 +274,12 @@ if not all([ACCESS_TOKEN, VERIFY_TOKEN, PHONE_NUMBER_ID]):
 
 # --- Centralized Database and App Initialization ---
 # Create the DB objects here, only once.
-client = chromadb.Client()
+# client = chromadb.Client()
+client = chromadb.PersistentClient(path="./chroma_data")
 collection = client.get_or_create_collection(name="schemes")
+
+
+
 app = FastAPI()
 
 # --- Startup Event ---
@@ -330,6 +334,8 @@ async def handle_webhook(request: Request):
 
                 # === YOUR CORE LOGIC EXECUTES HERE ===
                 lang = detect_lang(user_text)
+                print(f"Detected language: {lang}")
+                
                 query_vector = embed_text(user_text)
                 # Pass the 'collection' object to the search function
                 results = search_chunks(collection, query_vector, lang=lang, top_k=3)
