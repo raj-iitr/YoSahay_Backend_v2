@@ -249,6 +249,7 @@ import os
 import logging
 import httpx
 import chromadb
+import time
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException
 
@@ -279,6 +280,9 @@ client = chromadb.Client()
 collection = client.get_or_create_collection(name="schemes")
 
 
+# Create a simple cache. In a real large-scale app, you'd use Redis.
+# The key will be the user's query, the value will be the generated response.
+query_cache = {}
 
 app = FastAPI()
 
@@ -331,6 +335,21 @@ async def handle_webhook(request: Request):
                 user_phone = message_data["from"]
                 user_text = message_data["text"]["body"].strip()
                 logger.info(f"Processing message from {user_phone}: '{user_text}'")
+                
+                normalized_query = user_text.lower().strip()
+
+            # --- CACHE LOGIC START ---
+                if normalized_query in query_cache:
+                    # HIT! We found the answer in our cache.
+                    cached_reply = query_cache[normalized_query]
+                    logger.info(f"[ANALYTICS] Type=CACHE_HIT, Query='{normalized_query}'")
+                    await send_whatsapp_message(user_phone, cached_reply)
+                    return Response(status_code=200) # End the function here.
+                    # --- CACHE LOGIC END ---
+                    
+                # If we are here, it's a CACHE MISS. We need to call the AI.
+                logger.info(f"[ANALYTICS] Type=CACHE_MISS, Query='{normalized_query}'")
+    
 
                 # === YOUR CORE LOGIC EXECUTES HERE ===
                 lang = detect_lang(user_text)
@@ -338,10 +357,22 @@ async def handle_webhook(request: Request):
                 
                 query_vector = embed_text(user_text)
                 # Pass the 'collection' object to the search function
-                results = search_chunks(collection, query_vector, lang=lang, top_k=3)
+                
+                if len(user_text.split()) < 5:
+                  num_chunks = 2 
+                else:
+                  num_chunks = 3 # For more complex questions
+                
+                results = search_chunks(collection, query_vector, lang=lang, top_k=num_chunks)
                 chunks = results['documents'][0] if results['documents'] else []
                 reply = generate_response(user_text, chunks, lang)
                 # ====================================
+                
+                # --- SAVE TO CACHE ---
+                # Before sending the reply, save it to the cache for next time.
+                query_cache[normalized_query] = reply
+                # ---------------------
+                
                 await send_whatsapp_message(user_phone, reply)
 
     except Exception as e:
