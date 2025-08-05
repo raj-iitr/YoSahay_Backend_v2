@@ -43,6 +43,7 @@
 
 
 # app/responder.py
+# app/responder.py
 
 import os
 from openai import OpenAI
@@ -50,18 +51,19 @@ from openai import OpenAI
 # Initialize the OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-# --- THIS IS THE NEW, STRICT SYSTEM PROMPT WITH HINGLISH SUPPORT ---
-SYSTEM_PROMPT = """You are 'Sarkari Yojana Sahayak,' a helpful and precise AI assistant for providing information about Indian government schemes.
+# --- THIS IS THE NEW, REVISED SYSTEM PROMPT ---
+SYSTEM_PROMPT = """You are 'Sarkari Yojana Sahayak,' an expert AI assistant. Your primary job is to extract and summarize information about Indian government schemes from the context provided.
 
 Your rules are:
-1.  You MUST answer questions ONLY based on the provided 'RELEVANT INFO' context.
-2.  Your answers should be in the same language as the user's question (Hindi, English, or Hinglish). For Hinglish, use Roman script (e.g., "aap kaise ho?").
-3.  If the provided 'RELEVANT INFO' is empty or does not contain the answer to the user's question, you MUST refuse to answer.
-4.  When you refuse, you MUST reply with ONLY ONE of the following sentences, depending on the language:
-    - For Hindi questions: "माफ़ कीजिए, यह जानकारी मेरे पास उपलब्ध नहीं है। कृपया किसी सरकारी योजना के बारे में ही पूछें।"
-    - For English questions: "I'm sorry, I don't have information on that topic. Please ask only about government schemes."
-    - For Hinglish questions: "Sorry, iske baare mein jaankari available nahi hai. Kripya kisi sarkari yojana ke baare mein puchiye."
-5.  Do not make up information or answer questions outside of the provided context. Be helpful but strict.
+1.  Analyze the user's question and the 'RELEVANT INFO' provided below.
+2.  If the 'RELEVANT INFO' contains information relevant to the user's question, answer the question by summarizing the information from the context.
+3.  Your answer MUST be in the same language as the user's question (Hindi, English, or Hinglish).
+4.  If the 'RELEVANT INFO' is completely empty or clearly unrelated to the user's question, then and ONLY then should you refuse to answer.
+5.  When you refuse, use one of these exact sentences:
+    - Hindi: "माफ़ कीजिए, यह जानकारी मेरे पास उपलब्ध नहीं है। कृपया किसी सरकारी योजना के बारे में ही पूछें।"
+    - English: "I'm sorry, I don't have information on that topic. Please ask only about government schemes."
+    - Hinglish: "Sorry, iske baare mein jaankari available nahi hai. Kripya kisi sarkari yojana ke baare mein puchiye."
+6.  Do not add any information that is not present in the 'RELEVANT INFO'.
 """
 
 def generate_response(user_message: str, chunks: list[str], lang: str) -> str:
@@ -89,7 +91,13 @@ def generate_response(user_message: str, chunks: list[str], lang: str) -> str:
             temperature=0.2,
             max_tokens=300
         )
-        return response.choices[0].message.content.strip()
+        # Add a check here. If the AI still refuses, use our fallback.
+        reply = response.choices[0].message.content.strip()
+        if "sorry" in reply.lower() or "माफ़ कीजिए" in reply:
+             logger.warning(f"AI chose to refuse despite context. Query: '{user_message}'")
+             return get_fallback_message(lang)
+        
+        return reply
 
     except Exception as e:
         logger.error(f"Error calling OpenAI API: {e}", exc_info=True)
@@ -100,7 +108,7 @@ def build_prompt(user_message: str, context: str, lang: str) -> str:
     Constructs the final prompt string for the AI based on the detected language.
     """
     if lang == "hi":
-        return f"""प्रासंगिक जानकारी:\n---\n{context}\n---\n\nप्रश्न: {user_message}"""
+        return f"""RELEVANT INFO:\n---\n{context}\n---\n\nUSER'S QUESTION: {user_message}"""
     elif lang == "en":
         return f"""RELEVANT INFO:\n---\n{context}\n---\n\nUSER'S QUESTION: {user_message}"""
     else:  # Default to Hinglish for "hi-en" or "unknown"
