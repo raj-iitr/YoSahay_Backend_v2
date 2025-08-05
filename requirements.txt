@@ -1,0 +1,15 @@
+# Web Server
+fastapi
+uvicorn
+
+# AI and Database
+openai
+chromadb
+
+# HTTP Requests
+requests
+
+# Environment Variables
+python-dotenv
+
+langdetect
