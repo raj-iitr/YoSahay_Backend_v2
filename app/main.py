@@ -334,7 +334,7 @@ async def handle_webhook(request: Request):
 
                 # === YOUR CORE LOGIC EXECUTES HERE ===
                 lang = detect_lang(user_text)
-                print(f"Detected language: {lang}")
+                logger.info(f"Detected language: {lang}")
                 
                 query_vector = embed_text(user_text)
                 # Pass the 'collection' object to the search function
