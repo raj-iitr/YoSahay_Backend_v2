@@ -157,6 +157,7 @@ import logging
 import httpx
 import chromadb
 import time  # <-- ADDED: Import the time module for timestamps
+import re 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks # <-- ADDED: Import BackgroundTasks
 
@@ -295,21 +296,37 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks): #
     try:
         payload = await request.json()
         
-        if (payload.get("object") and payload.get("entry") and payload["entry"][0].get("changes") and 
-                payload["entry"][0]["changes"][0].get("value") and payload["entry"][0]["changes"][0]["value"].get("messages")):
+        if (payload.get("object") and payload.get("entry") and payload["entry"][0].get("changes") and  payload["entry"][0]["changes"][0].get("value")):
             
-            message_data = payload["entry"][0]["changes"][0]["value"]["messages"][0]
+            value_payload = payload["entry"][0]["changes"][0]["value"]
             
-            if message_data.get("type") == "text":
+            # 2. Check if it's a message. If not, it could be a 'status' update, which we ignore.
+            if "messages" in value_payload:
+                message_data = value_payload["messages"][0]
                 user_phone = message_data["from"]
-                user_text = message_data["text"]["body"].strip()
+                message_type = message_data.get("type")
+            
+                # 3. Handle TEXT messages
+                if message_type == "text":
+                    user_text = message_data.get("text", {}).get("body", "").strip()
+                    
+                    if not user_text or not re.search(r'[a-zA-Z0-9]', user_text):
+                        logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or symbol-only message'")
+                        return Response(status_code=200)
 
                 # ADDED: Log the message received right away
-                logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
+                    logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
 
                 # ADDED: Add the slow work to the background task queue
-                background_tasks.add_task(process_and_reply, user_phone, user_text)
+                    background_tasks.add_task(process_and_reply, user_phone, user_text)
+                    
+                else:
+                    logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Non-text message', MessageType='{message_type}'")
 
+            else:
+                logger.info("Received a non-message notification (e.g., status update). Ignoring.")
+
+            
     except Exception as e:
         logger.error(f"Error in handle_webhook (before background task): {e}", exc_info=True)
     
