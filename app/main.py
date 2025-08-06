@@ -167,7 +167,7 @@ from app.embedder import embed_text
 from app.db import search_chunks, load_data_into_chroma
 from app.responder import generate_response
 
-DISTANCE_THRESHOLD = 1.0
+DISTANCE_THRESHOLD = 1.5
 
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
