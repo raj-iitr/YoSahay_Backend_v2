@@ -167,6 +167,8 @@ from app.embedder import embed_text
 from app.db import search_chunks, load_data_into_chroma
 from app.responder import generate_response
 
+DISTANCE_THRESHOLD = 1.0
+
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -228,26 +230,36 @@ async def process_and_reply(user_phone: str, user_text: str):
         logger.info(f"[METRIC] Type=CACHE_MISS, UserID={user_phone}, Query='{normalized_query}'")
 
         # === YOUR CORE LOGIC REMAINS THE SAME, BUT IS NOW INSIDE THIS FUNCTION ===
+                # --- CORE LOGIC with RELEVANCE CHECK ---
         lang = detect_lang(user_text)
-        logger.info(f"Detected language: {lang}")
-        
-        if len(user_text.split()) < 5:
-            num_chunks = 2
-        else:
-            num_chunks = 3
-
         query_vector = embed_text(user_text)
-        results = search_chunks(collection, query_vector, lang=lang, top_k=num_chunks)
-        chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
         
-        if chunks:
-            top_scheme_source = results['metadatas'][0][0].get('source', 'unknown')
-            logger.info(f"[METRIC] Type=CONTEXT_FOUND, UserID={user_phone}, TopScheme='{top_scheme_source}', Query='{user_text}'")
-        else:
-            logger.warning(f"[METRIC] Type=NO_CONTEXT_FOUND, UserID={user_phone}, Query='{user_text}'")
+        # We always search for at least a few chunks now
+        results = search_chunks(collection, query_vector, lang=lang, top_k=3)
+
+        # --- The Distance Threshold Check ---
+        # Get the distance of the single best match. Default to a high number if no results.
+        best_distance = results['distances'][0][0] if results.get('distances') and results['distances'][0] else 2.0
+        
+        if best_distance > DISTANCE_THRESHOLD:
+            # The query is irrelevant. Fail early without calling the expensive chat model.
+            logger.warning(f"[METRIC] Type=NO_CONTEXT_FOUND, UserID={user_phone}, Reason='Relevance threshold failed', Distance={best_distance:.2f}, Query='{user_text}'")
+            
+            # Call generate_response with EMPTY chunks, which will trigger its fallback message.
+            reply = generate_response(user_text, [], lang) 
+            
+            # Save this "refusal" to the cache so we don't re-process the same bad query.
+            query_cache[normalized_query] = (reply, time.time())
+            
+            await send_whatsapp_message(user_phone, reply)
+            return # Exit the task early.
+
+        # If we passed the threshold, the context is good. Proceed as normal.
+        chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
+        top_scheme_source = results['metadatas'][0][0].get('source', 'unknown')
+        logger.info(f"[METRIC] Type=CONTEXT_FOUND, UserID={user_phone}, TopScheme='{top_scheme_source}', Distance={best_distance:.2f}, Query='{user_text}'")
         
         reply = generate_response(user_text, chunks, lang)
-        
         # --- MODIFIED: Save the reply AND the current time to the cache ---
         query_cache[normalized_query] = (reply, time.time())
         

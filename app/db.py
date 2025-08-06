@@ -70,13 +70,18 @@ import os
 import chromadb
 from chromadb.types import Collection
 from app.embedder import embed_text  # Import the embedder to use in loading
+from langchain_text_splitters import RecursiveCharacterTextSplitter 
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 def load_data_into_chroma(collection: Collection):
     """
-    Reads all .txt files from the 'docs' folder, embeds them,
+    Reads .txt files, splits them into smaller chunks, embeds them,
     and loads them into the provided ChromaDB collection.
     """
-    logger.info("Executing startup task: Loading data into ChromaDB...")
+    logger.info("Executing startup task: Loading and chunking data for ChromaDB...")
     
     if collection.count() > 0:
         logger.info("Data is already present in the collection. Skipping.")
@@ -84,37 +89,53 @@ def load_data_into_chroma(collection: Collection):
 
     data_directory = "docs"
     
-    documents = []
-    metadatas = []
-    ids = []
+    # --- NEW: Initialize the text splitter ---
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,  # The max number of characters in a chunk
+        chunk_overlap=100, # The number of characters to overlap between chunks
+        length_function=len,
+    )
     
+    all_chunks = []
+    all_metadatas = []
+    all_ids = []
+    chunk_id_counter = 1
+
     if not os.path.exists(data_directory):
         logger.error(f"Error: Data directory '{data_directory}' not found.")
         return
 
-    for doc_id, filename in enumerate(os.listdir(data_directory)):
+    for filename in os.listdir(data_directory):
         if filename.endswith(".txt"):
             filepath = os.path.join(data_directory, filename)
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read()
-                documents.append(content)
-                metadatas.append({"source": filename})
-                ids.append(str(doc_id + 1))
+                
+                # --- NEW: Split the document into chunks ---
+                chunks = text_splitter.split_text(content)
+                
+                for chunk in chunks:
+                    all_chunks.append(chunk)
+                    # Each chunk inherits the source filename as metadata
+                    all_metadatas.append({"source": filename})
+                    all_ids.append(str(chunk_id_counter))
+                    chunk_id_counter += 1
     
-    if documents:
-        # Embed all documents at once for efficiency
-        embeddings = [embed_text(doc) for doc in documents]
+    if all_chunks:
+        # Embed all chunks at once for efficiency
+        embeddings = [embed_text(chunk) for chunk in all_chunks]
         
         collection.add(
             embeddings=embeddings,
-            documents=documents,
-            metadatas=metadatas,
-            ids=ids
+            documents=all_chunks,
+            metadatas=all_metadatas,
+            ids=all_ids
         )
-        logger.info(f"Success! Loaded and embedded {len(documents)} documents into ChromaDB.")
+        logger.info(f"Success! Loaded and embedded {len(all_chunks)} chunks into ChromaDB.")
     else:
-        logger.warning("No documents found in 'docs' folder.")
-
+        logger.warning("No documents found to chunk and load.")
+        
+        
 def add_scheme_chunk(collection: Collection, id: str, text: str, embedding: list, scheme_id: str, lang: str):
     """
     Adds a single chunk to the provided collection.
@@ -126,6 +147,7 @@ def add_scheme_chunk(collection: Collection, id: str, text: str, embedding: list
         metadatas=[{"scheme_id": scheme_id, "lang": lang}]
     )
 
+
 def search_chunks(collection: Collection, query_embedding: list, lang: str, top_k: int = 3):
     """
     Searches the provided collection for chunks matching the query embedding.
@@ -136,10 +158,8 @@ def search_chunks(collection: Collection, query_embedding: list, lang: str, top_
     return collection.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
+        include=["metadatas", "documents", "distances"]
         # where={"lang": lang}  # This filter might not work as expected with embeddings.
                                 # Let's query all and filter later if needed.
     )
 
-# --- Logging Setup ---
-import logging
-logger = logging.getLogger(__name__)

@@ -83,7 +83,7 @@ def generate_response(user_message: str, chunks: list[str], lang: str) -> str:
 
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt_for_user}
