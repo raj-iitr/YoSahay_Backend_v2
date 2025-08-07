@@ -19,7 +19,7 @@ try:
     # Authorize and connect to Google Sheets
     gc = gspread.service_account_from_dict(creds_dict)
     # Open the sheet by its exact name. Make sure your sheet is named this.
-    sheet = gc.open("YoSahay Bot - User Questions").sheet1
+    sheet = gc.open("YoSahay Bot User Questions").sheet1
     logger.info("Successfully connected to Google Sheets for analytics logging.")
 except Exception as e:
     logger.error(f"FATAL: Failed to connect to Google Sheets. Analytics will not be logged. Error: {e}")
