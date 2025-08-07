@@ -5,7 +5,7 @@ import logging
 import httpx
 import chromadb
 import time
-import re
+import regex as re  # <<<--- MODIFIED: Import the more powerful 'regex' library as re
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 
@@ -15,7 +15,7 @@ from app.embedder import embed_text
 from app.db import search_chunks, load_data_into_chroma
 from app.responder import generate_response
 
-DISTANCE_THRESHOLD = 1.2 # I've set this to a more reasonable default. Adjust after your tests.
+DISTANCE_THRESHOLD = 1.2 # Adjust this based on your tests.
 
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -82,7 +82,7 @@ async def process_and_reply(user_phone: str, user_text: str):
             return
 
         chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
-        top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown') # Corrected to use 'scheme'
+        top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown')
         logger.info(f"[METRIC] Type=CONTEXT_FOUND, UserID={user_phone}, TopScheme='{top_scheme_source}', Distance={best_distance:.2f}, Query='{user_text}'")
         
         reply = generate_response(user_text, chunks, lang)
@@ -111,14 +111,25 @@ async def send_whatsapp_message(to: str, message: str):
 # --- Webhook Endpoints ---
 @app.get("/")
 async def verify_webhook(request: Request):
-    # ... (remains the same) ...
+    mode = request.query_params.get("hub.mode")
+    token = request.query_params.get("hub.verify_token")
+    challenge = request.query_params.get("hub.challenge")
+
+    if mode == "subscribe" and token == VERIFY_TOKEN:
+        logger.info("Webhook verified successfully!")
+        return Response(content=challenge, status_code=200)
+    else:
+        logger.error("Webhook verification failed.")
+        raise HTTPException(status_code=403, detail="Verification token mismatch.")
 
 @app.post("/")
 async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
     try:
         payload = await request.json()
         
-        if (payload.get("object") and ...): # Check for valid message structure
+        if (payload.get("object") and payload.get("entry") and payload["entry"][0].get("changes") and 
+                payload["entry"][0]["changes"][0].get("value")):
+            
             value_payload = payload["entry"][0]["changes"][0]["value"]
             
             if "messages" in value_payload:
@@ -129,8 +140,8 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                 if message_type == "text":
                     user_text = message_data.get("text", {}).get("body", "").strip()
                     
-                    # --- THIS IS THE CORRECTED LINE ---
-                    if not user_text or not re.search(r'[\w\u0900-\u097F]', user_text):
+                    # --- THIS IS THE FINAL, CORRECTED FILTER ---
+                    if not user_text or not re.search(r'[\p{L}\p{N}]', user_text):
                         logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or non-alphanumeric message'")
                         return Response(status_code=200)
 
@@ -149,4 +160,16 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
 
 @app.get("/health")
 def health_check():
-    # ... (remains the same) ...
+    try:
+        item_count = collection.count()
+        cache_size = len(query_cache)
+        return {
+            "status": "ok",
+            "message": "Server is running.",
+            "chromadb_collection_name": collection.name,
+            "items_in_collection": item_count,
+            "items_in_cache": cache_size
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}", exc_info=True)
+        return {"status": "error", "message": str(e)}
