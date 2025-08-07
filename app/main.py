@@ -5,7 +5,7 @@ import logging
 import httpx
 import chromadb
 import time
-import regex as re  # <<<--- MODIFIED: Import the more powerful 'regex' library as re
+import re # We still need the basic 're' for your previous structure, let's keep it.
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 
@@ -15,7 +15,7 @@ from app.embedder import embed_text
 from app.db import search_chunks, load_data_into_chroma
 from app.responder import generate_response
 
-DISTANCE_THRESHOLD = 1.2 # Adjust this based on your tests.
+DISTANCE_THRESHOLD = 1.2 # Adjust this based on your final relevance tests
 
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -140,10 +140,13 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                 if message_type == "text":
                     user_text = message_data.get("text", {}).get("body", "").strip()
                     
-                    # --- THIS IS THE FINAL, CORRECTED FILTER ---
-                    if not user_text or not re.search(r'[\p{L}\p{N}]', user_text):
-                        logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or non-alphanumeric message'")
+                    # --- THIS IS THE GUARANTEED WORKING FILTER ---
+                    # It checks if ANY character in the string is a letter.
+                    # This is fully Unicode-aware and reliable for all languages.
+                    if not user_text or not any(char.isalpha() for char in user_text):
+                        logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or non-letter message', Content='{user_text}'")
                         return Response(status_code=200)
+                    # --- END OF FINAL FILTER ---
 
                     logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
                     background_tasks.add_task(process_and_reply, user_phone, user_text)
