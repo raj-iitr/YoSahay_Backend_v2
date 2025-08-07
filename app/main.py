@@ -71,6 +71,7 @@ async def process_and_reply(user_phone: str, user_text: str):
         logger.info(f"[METRIC] Type=CACHE_MISS, UserID={user_phone}, Query='{normalized_query}'")
 
         lang = detect_lang(user_text)
+        logger.info(f"Detected language: {lang}")
         query_vector = embed_text(user_text)
         results = search_chunks(collection, query_vector, lang=lang, top_k=3)
         
