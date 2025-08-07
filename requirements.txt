@@ -7,3 +7,5 @@ langchain-text-splitters
 chromadb
 langdetect
 regex 
+gspread          # <<<--- ADD THIS
+oauth2client 

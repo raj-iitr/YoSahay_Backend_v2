@@ -5,9 +5,11 @@ import logging
 import httpx
 import chromadb
 import time
+
 import re # We still need the basic 're' for your previous structure, let's keep it.
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
+from app.analytics_logger import log_user_question
 
 # --- Your Bot's Core Logic Imports ---
 from app.detector import detect_lang
@@ -147,6 +149,12 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                         logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or non-letter message', Content='{user_text}'")
                         return Response(status_code=200)
                     # --- END OF FINAL FILTER ---
+                    
+                    
+                    # <<<--- THIS IS THE NEW ANALYTICS CALL ---
+                    # Log the user's question to Google Sheets in the background.
+                    background_tasks.add_task(log_user_question, user_id=user_phone, question_text=user_text)
+                    # --- END OF NEW CALL ---
 
                     logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
                     background_tasks.add_task(process_and_reply, user_phone, user_text)
