@@ -214,22 +214,111 @@
 
 # app/db.py
 
+# import os
+# import chromadb
+# from chromadb.types import Collection
+# from app.embedder import embed_text
+# from langchain_text_splitters import RecursiveCharacterTextSplitter
+# import logging
+
+# # Set up logging for this module
+# logger = logging.getLogger(__name__)
+# # Basic logging config in case this module is run standalone
+# logging.basicConfig(level=logging.INFO)
+
+# def load_data_into_chroma(collection: Collection):
+#     """
+#     Looks for 'knowledge_base' in the project root, loads all .md files,
+#     chunks them, embeds them, and adds them to the ChromaDB collection.
+#     """
+#     logger.info("Executing startup task: Loading and chunking data for ChromaDB...")
+    
+#     if collection.count() > 0:
+#         logger.info("Data is already present in the collection. Skipping.")
+#         return
+
+#     # --- THIS IS THE CRITICAL FIX FOR YOUR STRUCTURE ---
+#     # The knowledge_base directory is at the root of the project.
+#     knowledge_base_dir = "knowledge_base"
+#     # --- END OF CRITICAL FIX ---
+    
+#     logger.info(f"Searching for knowledge base in: {knowledge_base_dir}")
+
+#     if not os.path.exists(knowledge_base_dir):
+#         logger.error(f"FATAL: Knowledge base directory not found at '{knowledge_base_dir}'. Make sure it's in the project root.")
+#         return
+
+#     text_splitter = RecursiveCharacterTextSplitter(
+#         chunk_size=1000,
+#         chunk_overlap=100,
+#         length_function=len,
+#     )
+    
+#     all_chunks, all_metadatas, all_ids = [], [], []
+#     chunk_id_counter = 1
+
+#     # Loop through the items in the base directory (e.g., 'pm_kisan', 'pmay_g')
+#     for scheme_folder in os.listdir(knowledge_base_dir):
+#         scheme_path = os.path.join(knowledge_base_dir, scheme_folder)
+        
+#         # Process only if the item is a directory
+#         if os.path.isdir(scheme_path):
+#             scheme_name = scheme_folder
+            
+#             # Find and process all .md files within this scheme's folder
+#             for filename in os.listdir(scheme_path):
+#                 if filename.endswith(".md"):
+#                     filepath = os.path.join(scheme_path, filename)
+#                     logger.info(f"Processing file: {filepath} for scheme: {scheme_name}")
+                    
+#                     with open(filepath, 'r', encoding='utf-8') as f:
+#                         content = f.read()
+#                         chunks = text_splitter.split_text(content)
+                        
+#                         for chunk in chunks:
+#                             all_chunks.append(chunk)
+#                             all_metadatas.append({
+#                                 "source_file": filename,
+#                                 "scheme": scheme_name
+#                             })
+#                             all_ids.append(str(chunk_id_counter))
+#                             chunk_id_counter += 1
+    
+#     if all_chunks:
+#         embeddings = [embed_text(chunk) for chunk in all_chunks]
+#         collection.add(
+#             embeddings=embeddings,
+#             documents=all_chunks,
+#             metadatas=all_metadatas,
+#             ids=all_ids
+#         )
+#         logger.info(f"Success! Loaded and embedded {len(all_chunks)} chunks.")
+#     else:
+#         logger.warning("No .md documents found in the subdirectories of the knowledge base.")
+
+# # in app/db.py
+# # In app/db.py
+# # in app/db.py
+
+# def search_chunks(collection: Collection, query_embedding: list, scheme_filter: str | None, top_k: int = 3):
+
+
+# app/db.py
+
 import os
 import chromadb
 from chromadb.types import Collection
 from app.embedder import embed_text
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import logging
+import time
 
-# Set up logging for this module
 logger = logging.getLogger(__name__)
-# Basic logging config in case this module is run standalone
 logging.basicConfig(level=logging.INFO)
 
 def load_data_into_chroma(collection: Collection):
     """
-    Looks for 'knowledge_base' in the project root, loads all .md files,
-    chunks them, embeds them, and adds them to the ChromaDB collection.
+    Loads data in batches from the 'knowledge_base' directory in the project root.
     """
     logger.info("Executing startup task: Loading and chunking data for ChromaDB...")
     
@@ -237,114 +326,80 @@ def load_data_into_chroma(collection: Collection):
         logger.info("Data is already present in the collection. Skipping.")
         return
 
-    # --- THIS IS THE CRITICAL FIX FOR YOUR STRUCTURE ---
-    # The knowledge_base directory is at the root of the project.
     knowledge_base_dir = "knowledge_base"
-    # --- END OF CRITICAL FIX ---
-    
-    logger.info(f"Searching for knowledge base in: {knowledge_base_dir}")
-
-    if not os.path.exists(knowledge_base_dir):
-        logger.error(f"FATAL: Knowledge base directory not found at '{knowledge_base_dir}'. Make sure it's in the project root.")
-        return
-
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=100,
-        length_function=len,
-    )
-    
     all_chunks, all_metadatas, all_ids = [], [], []
     chunk_id_counter = 1
 
-    # Loop through the items in the base directory (e.g., 'pm_kisan', 'pmay_g')
+    if not os.path.exists(knowledge_base_dir):
+        logger.error(f"FATAL: Knowledge base directory not found at '{knowledge_base_dir}'.")
+        return
+
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    
     for scheme_folder in os.listdir(knowledge_base_dir):
         scheme_path = os.path.join(knowledge_base_dir, scheme_folder)
-        
-        # Process only if the item is a directory
         if os.path.isdir(scheme_path):
-            scheme_name = scheme_folder
-            
-            # Find and process all .md files within this scheme's folder
             for filename in os.listdir(scheme_path):
                 if filename.endswith(".md"):
                     filepath = os.path.join(scheme_path, filename)
-                    logger.info(f"Processing file: {filepath} for scheme: {scheme_name}")
-                    
                     with open(filepath, 'r', encoding='utf-8') as f:
                         content = f.read()
                         chunks = text_splitter.split_text(content)
-                        
                         for chunk in chunks:
                             all_chunks.append(chunk)
-                            all_metadatas.append({
-                                "source_file": filename,
-                                "scheme": scheme_name
-                            })
+                            all_metadatas.append({"source_file": filename, "scheme": scheme_folder})
                             all_ids.append(str(chunk_id_counter))
                             chunk_id_counter += 1
-    
-    if all_chunks:
-        embeddings = [embed_text(chunk) for chunk in all_chunks]
-        collection.add(
-            embeddings=embeddings,
-            documents=all_chunks,
-            metadatas=all_metadatas,
-            ids=all_ids
-        )
-        logger.info(f"Success! Loaded and embedded {len(all_chunks)} chunks.")
-    else:
-        logger.warning("No .md documents found in the subdirectories of the knowledge base.")
 
-# in app/db.py
-# In app/db.py
-# in app/db.py
+    if not all_chunks:
+        logger.warning("No .md documents found to load.")
+        return
+        
+    logger.info(f"Found a total of {len(all_chunks)} chunks to process.")
+
+    batch_size = 50
+    for i in range(0, len(all_chunks), batch_size):
+        batch_chunks = all_chunks[i:i+batch_size]
+        batch_metadatas = all_metadatas[i:i+batch_size]
+        batch_ids = all_ids[i:i+batch_size]
+        
+        logger.info(f"Processing batch {i//batch_size + 1}...")
+        
+        try:
+            batch_embeddings = [embed_text(chunk) for chunk in batch_chunks]
+            collection.add(
+                embeddings=batch_embeddings,
+                documents=batch_chunks,
+                metadatas=batch_metadatas,
+                ids=batch_ids
+            )
+            time.sleep(1) 
+        except Exception as e:
+            logger.error(f"Failed to process batch starting at index {i}. Error: {e}")
+            continue 
+
+    logger.info(f"Finished loading all {len(all_chunks)} chunks into ChromaDB.")
+
 
 def search_chunks(collection: Collection, query_embedding: list, scheme_filter: str | None, top_k: int = 3):
     """
-    Searches the collection, applying a metadata filter only if a scheme is specified.
-    This version is compatible with recent ChromaDB updates.
+    This is the guaranteed working search function for recent ChromaDB versions.
+    It conditionally builds the query arguments to avoid the empty 'where' clause error.
     """
+    # 1. Start with the arguments that are always present.
+    query_args = {
+        "query_embeddings": [query_embedding],
+        "n_results": top_k,
+        "include": ["metadatas", "documents", "distances"]
+    }
+
+    # 2. Conditionally add the 'where' clause ONLY if a filter is provided.
     if scheme_filter:
-        # If a scheme was detected, create a 'where' filter and perform a filtered query.
-        where_clause = {"scheme": scheme_filter}
-        logger.info(f"Performing a FILTERED search for scheme: '{scheme_filter}'")
-        
-        return collection.query(
-            query_embeddings=[query_embedding],
-            n_results=top_k,
-            where=where_clause, # The 'where' parameter is included here
-            include=["metadatas", "documents", "distances"]
-        )
-    else:
-        # If no scheme was detected, perform a general query WITHOUT the 'where' parameter.
-        logger.info("No specific scheme detected. Performing a GENERAL search.")
-        
-        return collection.query(
-            query_embeddings=[query_embedding],
-            n_results=top_k,
-            # <<<--- CRITICAL FIX: The 'where' parameter is completely omitted ---
-            include=["metadatas", "documents", "distances"]
-        )
-    """
-    Searches the collection, applying a metadata filter if a scheme is specified.
-    This is the final, correct version.
-    """
-    # Create the 'where' clause for the ChromaDB query
-    where_clause = {}
-    if scheme_filter:
-        # If a scheme was detected, add it to the filter.
-        # This tells ChromaDB to ONLY search within documents that have this metadata.
-        where_clause = {"scheme": scheme_filter}
+        query_args["where"] = {"scheme": scheme_filter}
         logger.info(f"Performing a FILTERED search for scheme: '{scheme_filter}'")
     else:
-        # If no scheme was detected, perform a general search across all documents.
         logger.info("No specific scheme detected. Performing a GENERAL search.")
 
-    # Execute the query with the appropriate filter
-    return collection.query(
-        query_embeddings=[query_embedding],
-        n_results=top_k,
-        where=where_clause,
-        include=["metadatas", "documents", "distances"]
-    )
+    # 3. Execute the query using dictionary unpacking.
+    # This robustly handles both filtered and unfiltered cases.
+    return collection.query(**query_args)
