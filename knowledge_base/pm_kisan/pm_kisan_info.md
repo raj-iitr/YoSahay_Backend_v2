@@ -1,10 +1,10 @@
-# 🌾 Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)
+# 🌾 Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) (प्रधान मंत्री किसान सम्मान निधि)
 
 ---
 
 ## 📌 What is this Scheme? (Yeh Yojana Kya Hai?)
 
-- The Government started a new scheme called PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)  
+- The Government started a new scheme called PM-KISAN (प्रधान मंत्री किसान सम्मान निधि)  
 - This scheme gives money help (paise ki madad) to small and poor farmers (chhote aur gareeb kisaan)  
 - The money helps them buy farming tools (kheti ke saadhan) and for home needs (ghar ke kharche)  
 - 100% money is given by Government of India (Sarkar ke taraf se poora paisa diya jaata hai)  

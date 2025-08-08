@@ -66,25 +66,25 @@
 
 # app/db.py
 
-import os
-import chromadb
-from chromadb.types import Collection
-from app.embedder import embed_text  # Import the embedder to use in loading
-from langchain_text_splitters import RecursiveCharacterTextSplitter 
-import logging
+# import os
+# import chromadb
+# from chromadb.types import Collection
+# from app.embedder import embed_text  # Import the embedder to use in loading
+# from langchain_text_splitters import RecursiveCharacterTextSplitter 
+# import logging
 
 
-logger = logging.getLogger(__name__)
-# app/db.py
+# logger = logging.getLogger(__name__)
+# # app/db.py
 
-import os
-import chromadb
-from chromadb.types import Collection
-from app.embedder import embed_text
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-import logging
+# import os
+# import chromadb
+# from chromadb.types import Collection
+# from app.embedder import embed_text
+# from langchain_text_splitters import RecursiveCharacterTextSplitter
+# import logging
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 # app/db.py
 
 # import os
@@ -296,13 +296,29 @@ def load_data_into_chroma(collection: Collection):
     else:
         logger.warning("No .md documents found in the subdirectories of the knowledge base.")
 
+# in app/db.py
+# In app/db.py
 
-def search_chunks(collection: Collection, query_embedding: list, lang: str, top_k: int = 3):
+def search_chunks(collection: Collection, query_embedding: list, scheme_filter: str | None, top_k: int = 3):
     """
-    Searches the collection and includes distances, documents, and metadatas.
+    Searches the collection, applying a metadata filter if a scheme is specified.
+    This is the final, correct version.
     """
+    # Create the 'where' clause for the ChromaDB query
+    where_clause = {}
+    if scheme_filter:
+        # If a scheme was detected, add it to the filter.
+        # This tells ChromaDB to ONLY search within documents that have this metadata.
+        where_clause = {"scheme": scheme_filter}
+        logger.info(f"Performing a FILTERED search for scheme: '{scheme_filter}'")
+    else:
+        # If no scheme was detected, perform a general search across all documents.
+        logger.info("No specific scheme detected. Performing a GENERAL search.")
+
+    # Execute the query with the appropriate filter
     return collection.query(
         query_embeddings=[query_embedding],
         n_results=top_k,
+        where=where_clause,
         include=["metadatas", "documents", "distances"]
     )
