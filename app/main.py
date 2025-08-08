@@ -160,7 +160,7 @@ async def process_and_reply(user_phone: str, user_text: str):
 
         # 5. Generate and Send the Final Response
         chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
-        top_scheme_source = results['metadatastas'][0][0].get('scheme', 'unknown')
+        top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown')
         logger.info(f"[METRIC] Type=CONTEXT_FOUND, UserID={user_phone}, TopScheme='{top_scheme_source}', Distance={best_distance:.2f}, Query='{user_text}'")
         
         reply = generate_response(user_text, chunks, lang)
