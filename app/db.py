@@ -298,8 +298,34 @@ def load_data_into_chroma(collection: Collection):
 
 # in app/db.py
 # In app/db.py
+# in app/db.py
 
 def search_chunks(collection: Collection, query_embedding: list, scheme_filter: str | None, top_k: int = 3):
+    """
+    Searches the collection, applying a metadata filter only if a scheme is specified.
+    This version is compatible with recent ChromaDB updates.
+    """
+    if scheme_filter:
+        # If a scheme was detected, create a 'where' filter and perform a filtered query.
+        where_clause = {"scheme": scheme_filter}
+        logger.info(f"Performing a FILTERED search for scheme: '{scheme_filter}'")
+        
+        return collection.query(
+            query_embeddings=[query_embedding],
+            n_results=top_k,
+            where=where_clause, # The 'where' parameter is included here
+            include=["metadatas", "documents", "distances"]
+        )
+    else:
+        # If no scheme was detected, perform a general query WITHOUT the 'where' parameter.
+        logger.info("No specific scheme detected. Performing a GENERAL search.")
+        
+        return collection.query(
+            query_embeddings=[query_embedding],
+            n_results=top_k,
+            # <<<--- CRITICAL FIX: The 'where' parameter is completely omitted ---
+            include=["metadatas", "documents", "distances"]
+        )
     """
     Searches the collection, applying a metadata filter if a scheme is specified.
     This is the final, correct version.

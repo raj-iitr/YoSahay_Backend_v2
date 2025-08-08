@@ -21,7 +21,7 @@ from app.responder import generate_response
 from openai import OpenAI # Make sure OpenAI is imported if not already
 
 
-DISTANCE_THRESHOLD = 1.2 # Adjust this based on your final relevance tests
+DISTANCE_THRESHOLD = 1.6 # Adjust this based on your final relevance tests
 
 # --- Setup ---
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
