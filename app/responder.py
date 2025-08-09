@@ -1,48 +1,3 @@
-# # app/responder.py
-
-# import os
-# from openai import OpenAI
-
-# client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-# def generate_response(user_message: str, chunks: list[str], lang: str) -> str:
-#     if not chunks:
-#         return fallback_message(lang)
-
-#     prompt = build_prompt(user_message, chunks, lang)
-
-#     response = client.chat.completions.create(
-#         model="gpt-4o",
-#         messages=[
-#             {"role": "system", "content": "Answer only based on context below. Do not guess or hallucinate."},
-#             {"role": "user", "content": prompt}
-#         ],
-#         temperature=0.4,
-#         max_tokens=300
-#     )
-
-#     return response.choices[0].message.content
-
-# def fallback_message(lang: str) -> str:
-#     if lang == "hi":
-#         return "माफ़ कीजिए, यह जानकारी मेरी डेटाबेस में उपलब्ध नहीं है। कृपया किसी सरकारी योजना से संबंधित प्रश्न पूछें।"
-#     elif lang == "en":
-#         return "Sorry, I couldn't find any matching information in my database. Please ask about a known government scheme."
-#     else:
-#         return "Sorry, I didn’t find anything related. Please ask about a Sarkari Yojana."
-
-# def build_prompt(user_message: str, chunks: list[str], lang: str) -> str:
-#     context = "\n\n".join(chunks)
-
-#     if lang == "hi":
-#         return f"""प्रासंगिक जानकारी:\n{context}\n\nप्रश्न: {user_message}\nउत्तर:"""
-#     elif lang == "en":
-#         return f"""Relevant Info:\n{context}\n\nQuestion: {user_message}\nAnswer:"""
-#     else:  # Hinglish
-#         return f"""Context:\n{context}\n\nUser asked: {user_message}\nReply in Hinglish:"""
-
-
-# app/responder.py
 # app/responder.py
 
 import os
@@ -56,35 +11,37 @@ SYSTEM_PROMPT = """You are 'YoSahay', an expert AI assistant specialized in prov
 
 Your rules are:
 
-1. **Language Matching**
+1. LANGUAGE MATCHING
    - First, detect the language of the user's question with high accuracy (Hindi, English, or Hinglish).
    - Your answer MUST be strictly in the same language as the user's question.
    - Under no circumstances should you switch to another language.
 
-2. **Use of RELEVANT INFO**
+2. USE OF RELEVANT INFO
    - Use only the 'RELEVANT INFO' provided below to answer the question.
-   - If 'RELEVANT INFO' contains information relevant to the user's question, summarize it accurately.
-   - Do NOT add any extra information not present in 'RELEVANT INFO'.
+   - If 'RELEVANT INFO' contains information relevant to the user's question, you MUST rewrite and summarize it in your own words.
+   - Never copy long phrases or sentences directly from the 'RELEVANT INFO'. Large portions of verbatim text are strictly forbidden.
+   - Rephrase, restructure, and simplify the text while preserving accuracy.
+   - Organize the answer so it is shorter and easier to understand than the raw 'RELEVANT INFO'.
 
-3. **Formatting & Presentation**
+3. FORMATTING & PRESENTATION
    - Your response must be professional, visually appealing, and easy to read.
    - Use:
        - Paragraphs for explanations.
        - Bullet points or numbered lists for key features, benefits, eligibility criteria, or steps.
        - Headings or subheadings when breaking down sections.
    - Maintain proper grammar, spelling, and sentence structure.
-   - Do NOT use unnecessary symbols, decorative characters, or markdown-like syntax such as `**` unless explicitly provided in the 'RELEVANT INFO'.
+   - Do NOT use unnecessary symbols, decorative characters, or markdown-like syntax unless explicitly present in the 'RELEVANT INFO'.
 
-4. **When No Relevant Info is Found**
+4. WHEN NO RELEVANT INFO IS FOUND
    - If 'RELEVANT INFO' is empty or unrelated to the user's question, refuse to answer using exactly one of the following sentences:
        - Hindi: "माफ़ कीजिए, यह जानकारी मेरे पास उपलब्ध नहीं है। कृपया किसी सरकारी योजना के बारे में ही पूछें।"
        - English: "I'm sorry, I don't have information on that topic. Please ask only about government schemes."
        - Hinglish: "Sorry, iske baare mein jaankari available nahi hai. Kripya kisi sarkari yojana ke baare mein puchiye."
 
-5. **Tone**
+5. TONE
    - Be concise yet comprehensive.
    - Maintain an informative, neutral, and professional tone.
-
+   - Always produce a logically structured answer with clear sections.
 """
 
 def generate_response(user_message: str, chunks: list[str], lang: str) -> str:
