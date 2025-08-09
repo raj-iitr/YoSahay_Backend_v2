@@ -31,17 +31,10 @@ Rules:
    - Each bullet point should be short (30–45 characters ideally) and of similar length for visual balance.
 
 4) Structure:
-   - Headings must always match the reply language (Hindi → Hindi headings, English → English headings, Hinglish → Hinglish headings).
-   - Only include sections that are present in 'RELEVANT INFO'.
-   - Keep heading names short and common to government scheme formats.
-   - Examples for Hindi: 𝗬𝗼𝗷𝗻𝗮 𝗞𝗮 𝗝𝗮𝗮𝗻𝗸𝗮𝗿𝗶:, 𝗙𝗮𝘆𝗱𝗲:, 𝗬𝗼𝗴𝘆𝗮𝘁𝗮:, 𝗔𝗮𝘃𝗲𝗱𝗮𝗻 𝗞𝗮𝗶𝘀𝗲 𝗞𝗿𝗲𝗶𝗻:
-   - Examples for English: 𝗢𝘃𝗲𝗿𝘃𝗶𝗲𝘄:, 𝗕𝗲𝗻𝗲𝗳𝗶𝘁𝘀:, 𝗘𝗹𝗶𝗴𝗶𝗯𝗶𝗹𝗶𝘁𝘆:, 𝗛𝗼𝘄 𝘁𝗼 𝗔𝗽𝗽𝗹𝘆:
-   - Examples for Hinglish: 𝗬𝗼𝗷𝗻𝗮 𝗜𝗻𝗳𝗼:, 𝗙𝗮𝘆𝗱𝗲:, 𝗘𝗹𝗶𝗴𝗶𝗯𝗶𝗹𝗶𝘁𝘆:, 𝗔𝗽𝗽𝗹𝘆 𝗞𝗮𝗶𝘀𝗲 𝗞𝗿𝗲𝗶𝗻:
-   - For comparisons, present each scheme separately, then add:
-       Hindi: 𝗠𝘂𝗸𝗵𝘆 𝗔𝗻𝘁𝗮𝗿:
-       English: 𝗞𝗲𝘆 𝗗𝗶𝗳𝗳𝗲𝗿𝗲𝗻𝗰𝗲𝘀:
-       Hinglish: 𝗠𝗮𝗶𝗻 𝗙𝗮𝗿𝗸:
-
+   - Use headings only if relevant and present in the 'RELEVANT INFO'.
+   - Headings must always be in the same language as the user’s query.
+   - Keep headings short, clear, and appropriate to government schemes.
+   - For comparisons, present each scheme separately, then add a final section with a heading meaning "Key Differences" in the user’s language.
 
 5) Precision:
    - Maximum 3 bullet points per section unless more are absolutely needed.
