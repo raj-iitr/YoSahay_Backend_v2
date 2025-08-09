@@ -19,6 +19,7 @@ from app.embedder import embed_text
 from app.db import search_chunks, load_data_into_chroma
 from app.responder import generate_response
 from openai import OpenAI # Make sure OpenAI is imported if not already
+from app.analytics_logger import log_analytics_event 
 
 
 DISTANCE_THRESHOLD = 1.6 # Adjust this based on your final relevance tests
@@ -104,7 +105,77 @@ def classify_scheme_intent(query: str) -> str | None:
 # in app/main.py
 # In app/main.py
 
-async def process_and_reply(user_phone: str, user_text: str):
+async def process_and_reply(user_phone: str, user_text: str, background_tasks: BackgroundTasks):
+    """
+    This is the final, complete version of the background task.
+    It gathers all analytics data and logs it to Google Sheets at the end.
+    """
+    # 1. Initialize the analytics data bucket
+    analytics_data = {
+        "UserID": user_phone,
+        "QueryText": user_text,
+    }
+
+    try:
+        normalized_query = user_text.lower().strip()
+
+        # --- Stage 1: Small Talk Filter ---
+        if normalized_query in SMALL_TALK_WORDS:
+            analytics_data["ResponseType"] = "SMALL_TALK"
+            reply = "Namaste! Sarkari yojanaon ke baare mein jaankari ke liye apna prashn likhein."
+            if normalized_query in {"thanks", "thank you", "shukriya", "dhanyavaad"}:
+                reply = "Aapka swagat hai!"
+            await send_whatsapp_message(user_phone, reply)
+            return  # Exit early
+
+        # --- Stage 2: Cache Check ---
+        if normalized_query in query_cache:
+            cached_reply, timestamp = query_cache[normalized_query]
+            if time.time() - timestamp < 300:
+                return # Silently ignore duplicates
+            
+            analytics_data.update({"CacheStatus": "HIT", "ResponseType": "CACHED"})
+            await send_whatsapp_message(user_phone, cached_reply)
+            return
+
+        analytics_data["CacheStatus"] = "MISS"
+
+        # --- Stage 3: Core RAG Pipeline ---
+        lang = detect_lang(user_text)
+        analytics_data["Language"] = lang
+        
+        query_vector = embed_text(user_text)
+        results = search_chunks(collection, query_vector, lang=lang, top_k=3)
+        
+        best_distance = results['distances'][0][0] if results.get('distances') and results['distances'][0] else 2.0
+        analytics_data["RelevanceDistance"] = best_distance
+        
+        if best_distance > DISTANCE_THRESHOLD:
+            analytics_data.update({"ContextStatus": "NOT_FOUND_THRESHOLD", "ResponseType": "FALLBACK"})
+            reply = generate_response(user_text, [], lang) 
+            query_cache[normalized_query] = (reply, time.time())
+            await send_whatsapp_message(user_phone, reply)
+            return
+
+        chunks = results['documents'][0] if results.get('documents') and results['documents'] else []
+        top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown')
+        
+        analytics_data.update({"ContextStatus": "FOUND", "ContextSource": top_scheme_source, "ResponseType": "AI_GENERATED"})
+        
+        reply = generate_response(user_text, chunks, lang)
+        query_cache[normalized_query] = (reply, time.time())
+        await send_whatsapp_message(user_phone, reply)
+
+    except Exception as e:
+        analytics_data["ResponseType"] = "ERROR"
+        logger.error(f"[BACKGROUND_TASK_ERROR] User={user_phone}, Details='{e}'", exc_info=True)
+    
+    finally:
+        # --- FINAL STEP: Log everything to Google Sheets in the background ---
+        background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
+
+
+
     
     """
     This is the complete, final version of the background processing task.
@@ -203,6 +274,12 @@ async def verify_webhook(request: Request):
 
 @app.post("/")
 async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
+    
+    
+    """
+    This function's only job is to receive the message, validate it,
+    and hand it off to the background task for processing and logging.
+    """
     try:
         payload = await request.json()
         
@@ -219,33 +296,22 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
                 if message_type == "text":
                     user_text = message_data.get("text", {}).get("body", "").strip()
                     
-                    # --- THIS IS THE GUARANTEED WORKING FILTER ---
-                    # It checks if ANY character in the string is a letter.
-                    # This is fully Unicode-aware and reliable for all languages.
                     if not user_text or not any(char.isalpha() for char in user_text):
-                        logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Empty or non-letter message', Content='{user_text}'")
+                        # ... (your filter for ignored messages)
                         return Response(status_code=200)
-                    # --- END OF FINAL FILTER ---
-                    
-                    
-                    # <<<--- THIS IS THE NEW ANALYTICS CALL ---
-                    # Log the user's question to Google Sheets in the background.
-                    background_tasks.add_task(log_user_question, user_id=user_phone, question_text=user_text)
-                    # --- END OF NEW CALL ---
 
-                    logger.info(f"[METRIC] Type=MESSAGE_RECEIVED, UserID={user_phone}")
-                    background_tasks.add_task(process_and_reply, user_phone, user_text)
+                    # Hand off the main work AND the background_tasks object to the processor
+                    background_tasks.add_task(process_and_reply, user_phone, user_text, background_tasks)
                     
                 else:
-                    logger.warning(f"[METRIC] Type=IGNORED_MESSAGE, UserID={user_phone}, Reason='Non-text message', MessageType='{message_type}'")
+                    # ... (your filter for non-text messages)
             else:
-                logger.info("Received a non-message notification (e.g., status update). Ignoring.")
+                # ... (your filter for status updates)
             
     except Exception as e:
         logger.error(f"Error in handle_webhook (before background task): {e}", exc_info=True)
     
     return Response(status_code=200)
-
 @app.get("/health")
 def health_check():
     try:
