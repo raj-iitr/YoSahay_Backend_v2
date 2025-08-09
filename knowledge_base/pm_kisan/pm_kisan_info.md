@@ -1,78 +1,87 @@
-# 🌾 Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) (प्रधान मंत्री किसान सम्मान निधि)
+# 🌾 Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) / प्रधानमंत्री किसान सम्मान निधि
 
 ---
 
-## 📌 What is this Scheme? (Yeh Yojana Kya Hai?)
+## 📌 What is this Scheme? / यह योजना क्या है?
 
-- The Government started a new scheme called PM-KISAN (प्रधान मंत्री किसान सम्मान निधि)  
-- This scheme gives money help (paise ki madad) to small and poor farmers (chhote aur gareeb kisaan)  
-- The money helps them buy farming tools (kheti ke saadhan) and for home needs (ghar ke kharche)  
-- 100% money is given by Government of India (Sarkar ke taraf se poora paisa diya jaata hai)  
-- The scheme was launched on 24th February, 2019  
-- Started by Prime Minister Narendra Modi (Pradhan Mantri Narendra Modi ke dwara)
+**English:**  
+Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) is a central government income-support scheme launched on **24 February 2019**. The Government of India funds it fully. It gives small and marginal farmer families periodic direct cash support to meet farming inputs and household needs and reduces dependence on informal credit.
 
----
+**Hindi:**  
+प्रधानमंत्री किसान सम्मान निधि (पीएम-किसान) एक केंद्रीय योजना है, जो **24 फरवरी 2019** को शुरू हुई। यह योजना भारत सरकार द्वारा पूर्ण रूप से वित्तपोषित है। इसका उद्देश्य छोटे और सीमांत किसान परिवारों को सीधे नकद सहायता देना है जिससे कृषि और घरेलू जरूरतें पूरी हों और अनौपचारिक ऋण पर निर्भरता कम हो।
 
-## ✅ Who is Eligible? (Kaun Paatra Hai?)
-
-- Farmers whose family (parivaar - pati, patni aur bacche) owns:
-  - Up to 2 hectares (yaani lagbhag 7.74 bigha) land (as on 1 Feb 2019)
-
-- But these people cannot get the benefit (in logon ko yeh paisa nahi milega):
-
-  - Land owned by companies or big groups (badi company ya samuh ke naam par zameen)
-
-  - If any family member is:
-    - A senior government officer or minister (bada sarkari afsar ya mantri - abhi ya pehle)
-    - MP (Member of Parliament) ya MLA (Vidhan Sabha ke sadasya)
-    - Mayor ya Zila Panchayat ka pramukh
-    - Government employee (sarkari naukri mein)
-      - (Lekin chhoti naukri jaise peon, safai karamchari allowed hain)
-    - Getting pension of ₹10,000 or more (₹10,000 ya usse zyada pension mil rahi ho)
-      - (Chhoti naukri waalon ko chhoot milegi)
-    - Paid income tax (income tax diya ho pichle saal)
-    - Working privately as doctor, engineer, lawyer, CA, architect (aur private kaam kar rahe ho)
+**Hinglish:**  
+PM-KISAN ek central scheme hai (launched 24 Feb 2019). Poora paisa Govt of India deti hai. Ye chhote/limit farmers ke parivaar ko seed, khaad, aomedan ya ghar ke kharche ke liye direct cash madad deti hai, taki loan ki zaroorat kam ho.
 
 ---
 
-## 💰 What are the Benefits? (Kya Laabh Milenge?)
+## ✅ Who is Eligible? / कौन पात्र है?
 
-- Under PM-KISAN scheme, land-owning farmers (zameen wale kisaan) will get ₹6000 per year (har saal ₹6000)
-- The money will be given in 3 parts (3 baar mein milega):
-  - ₹2000 every 4 months (har 4 mahine mein ₹2000)
-- So, total ₹6000 har saal ek kisaan parivaar ko milta hai
+**English:**  
+Eligible: Small and marginal farmers whose family (husband, wife, minor children) **owns up to 2 hectares** of cultivable land (cut-off: **1 Feb 2019**).  
+Not eligible: Land held by companies/cooperatives; families with a member who is a high-level govt officer/minister, MP/MLA, mayor/district chairperson; regular government employees (except Class IV); those with monthly pension ≥ ₹10,000 (except Class IV retirees); those who paid income tax in previous year; professionals in private practice (doctor, lawyer, CA, engineer, architect).
 
----
+**Hindi:**  
+पात्रता: छोटे और सीमांत किसान जिनके परिवार (पति, पत्नी, अवयस्क बच्चे) के नाम **अधिकतम 2 हेक्टेयर** भूमि हो (कट-ऑफ: **1 फ़रवरी 2019**)।  
+अपात्र: कंपनियों/समूहों के नाम जमीन, उच्च पदस्थ सरकारी अफसर/मंत्री, सांसद/विधायक, महापौर/जिला अध्यक्ष, नियमित सरकारी कर्मचारी (क्लास IV के अलावा), ₹10,000+ पेंशन प्राप्तकर्ता (क्लास IV को छोड़कर), पिछले वर्ष आयकर भुगतानकर्ता, निजी पेशेवर।
 
-## 📄 What Documents are Required? (Zaroori Kagaz Kya Hain?)
-
-To apply for PM-KISAN, farmers must give:
-
-- Name (naam), age (umar), gender (ling), and caste (jaati - SC/ST)
-- Aadhaar number (Aadhaar card ka number)
-  - If Aadhaar not available, then give any one:
-    - Aadhaar Enrollment Number (agar Aadhaar ban raha ho)
-    - Voter ID, Driving Licence, NREGA Job Card ya koi bhi sarkari pehchaan patra
-- Bank account number and IFSC code (paise bhejne ke liye zaroori hai)
-- Mobile number (jaruri nahi hai, lekin dena achha hai taaki update milta rahe)
+**Hinglish:**  
+Kaun eligible: Family (husband, wife, minor kids) ke naam max 2 hectare zameen ho (cut-off 01-Feb-2019). Kaun nahi: company ke naam zameen, bade govt officers/MP/MLA/mayor, regular govt job (class IV except), ₹10,000+ pension, income tax payer, private professionals (doctor/engineer/CA).
 
 ---
 
-## 📝 How to Apply? (Aavedan Kaise Karein?)
+## 💰 What are the Benefits? / क्या लाभ मिलेंगे?
 
-- Naye kisaan online apply kar sakte hain at this link:  
-  👉 https://pmkisan.gov.in/RegistrationFormupdated.aspx
+**English:**  
+Each eligible farmer family receives **₹6,000 per year**, paid in **three equal installments** of **₹2,000** via Direct Benefit Transfer (DBT). Installments are typically released every four months to support agricultural inputs and household needs.
 
-- Fill the form with:
-  - Required details (zaroori jankari)
-  - A self-declaration (khud se likha hua vachan) that you are eligible
+**Hindi:**  
+प्रत्येक पात्र किसान परिवार को **₹6,000 प्रति वर्ष** दी जाती है, जो **तीन समान किस्तों** में ₹2,000-₹2,000 के रूप में **डायरेक्ट बेनिफिट ट्रांसफर (DBT)** से भेजी जाती हैं। किस्तें सामान्यतः हर चार महीने में आती हैं।
 
-- After form is submitted:
-  - It goes to the State Nodal Officer (Rajya ke zimmedar adhikari) for checking
-  - Officer verifies (jaanch karta hai) and uploads your data to PM-KISAN portal
-  - Then, the system automatically starts the payment process (paise bhejne ka process shuru ho jaata hai)
+**Hinglish:**  
+Faayda: Har saal ₹6,000 per eligible family (3 x ₹2,000). Paisa seedha bank account mein DBT se aata hai, aam tor par har 4 mahine par.
 
 ---
 
-🌱 PM-KISAN helps farmers live better and farm stronger.  
-(PM-KISAN kisano ki madad karta hai behtar jeevan aur achhi kheti ke liye)
+## 📄 What Documents are Required? / ज़रूरी कागज़ क्या हैं?
+
+**English:**  
+Required: personal details (name, age, gender, caste if applicable), **Aadhaar number** (preferred). If Aadhaar not available: Aadhaar enrollment no. OR Voter ID OR Driving Licence OR NREGA Job Card OR other valid govt photo ID. Also provide **bank account number & IFSC** for DBT; mobile number is optional but recommended.
+
+**Hindi:**  
+आवश्यक: व्यक्तिगत जानकारी (नाम, उम्र, लिंग, जाति), **आधार नंबर** (प्राथमिक)। यदि आधार नहीं है तो आधार एनरोलमेंट नंबर या वोटर-ID/ड्राइविंग लाइसेंस/मनरेगा जॉब कार्ड/अन्य मान्य सरकारी फोटो ID। बैंक खाता नंबर व IFSC ज़रूरी; मोबाइल नंबर देना लाभकारी है।
+
+**Hinglish:**  
+Docs: Naam, umar, ling, caste; Aadhaar best hai. Agar Aadhaar nahi to Aadhaar enrollment no. ya Voter ID/Driving licence/NREGA card chal jaata hai. Bank account + IFSC zaroori; mobile dena achha hota hai.
+
+---
+
+## 📝 How to Apply? / आवेदन कैसे करें?
+
+**English:**  
+Apply online at: https://pmkisan.gov.in/RegistrationFormupdated.aspx  
+Steps: fill personal, land and bank details; submit a self-declaration of eligibility; submit form → state nodal officer verifies → on approval data uploaded to PM-KISAN portal → DBT payments processed.
+
+**Hindi:**  
+ऑनलाइन आवेदन: https://pmkisan.gov.in/RegistrationFormupdated.aspx  
+चरण: व्यक्तिगत, भूमि और बैंक विवरण भरें; पात्रता की स्व-घोषणा दें; फ़ॉर्म जमा करें → राज्य नोडल अधिकारी सत्यापन करते हैं → स्वीकृति पर डेटा पोर्टल पर अपलोड होता है → भुगतान प्रक्रिया शुरू होती है।
+
+**Hinglish:**  
+Apply link: https://pmkisan.gov.in/RegistrationFormupdated.aspx  
+Kya karein: Form mein details bharein, self-declaration dein, submit karein. State nodal officer check karke approve karega; approve hone par portal pe data upload aur DBT payment start ho jayega.
+
+---
+
+## 📞 Contact & Official Links / संपर्क और आधिकारिक लिंक
+
+**English:**  
+- PM-KISAN Official: https://pmkisan.gov.in/ — scheme details, beneficiary status, announcements.  
+- State Nodal Officers: https://pmkisan.gov.in/SearchSNODetails.aspx — contact details for state-level help.
+
+**Hindi:**  
+- पीएम-किसान आधिकारिक: https://pmkisan.gov.in/ — योजना जानकारी, लाभार्थी स्थिति, घोषणाएँ।  
+- राज्य नोडल अधिकारी: https://pmkisan.gov.in/SearchSNODetails.aspx — आवेदन/सत्यापन/भुगतान सहायता के लिए संपर्क।
+
+**Hinglish:**  
+- Website: https://pmkisan.gov.in/ — sab info aur beneficiary status check karne ke liye.  
+- State nodal contact: https://pmkisan.gov.in/SearchSNODetails.aspx — agar local help chahiye to yahan se contact number/office dekho.
