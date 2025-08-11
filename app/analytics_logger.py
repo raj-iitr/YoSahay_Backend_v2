@@ -1,17 +1,17 @@
-# app/analytics_logger.py
-
 import gspread
-import os
-import json
 import base64
+import json
 from datetime import datetime
 import logging
+
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 # --- Authentication with Google Sheets ---
+sheet = None
 try:
-    creds_b64 = os.getenv("GCP_SA_KEY_B64")
+    creds_b64 = settings.GCP_SA_KEY_B64
     if not creds_b64:
         raise ValueError("GCP_SA_KEY_B64 environment variable not set.")
         
@@ -19,6 +19,7 @@ try:
     creds_dict = json.loads(creds_json_str)
     
     gc = gspread.service_account_from_dict(creds_dict)
+    # Ensure your sheet name is correct
     sheet = gc.open("YoSahay User Log").sheet1
     logger.info("Successfully connected to Google Sheets for rich analytics logging.")
 except Exception as e:
@@ -38,20 +39,19 @@ def log_analytics_event(analytics_data: dict):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Define the exact order of columns to match the spreadsheet
+        # Added 'IntentScheme' to track the new classification step
         headers = ["Timestamp", "UserID", "QueryText", "Language", "CacheStatus", 
-                   "ContextStatus", "ContextSource", "RelevanceDistance", "ResponseType"]
+                   "IntentScheme", "ContextStatus", "ContextSource", 
+                   "RelevanceDistance", "ResponseType"]
         
         # Build the row by getting data from the dictionary, with defaults for missing keys
-        row = []
-        for header in headers:
-            if header == "Timestamp":
-                row.append(timestamp)
-            elif header == "RelevanceDistance":
-                distance = analytics_data.get(header)
-                # Ensure distance is formatted correctly or left blank
-                row.append(f"{distance:.4f}" if isinstance(distance, (int, float)) else "")
+        row = [timestamp]
+        for header in headers[1:]: # Skip timestamp
+            value = analytics_data.get(header)
+            if header == "RelevanceDistance" and isinstance(value, (int, float)):
+                row.append(f"{value:.4f}")
             else:
-                row.append(analytics_data.get(header, ""))
+                row.append(str(value) if value is not None else "")
 
         sheet.append_row(row, value_input_option='USER_ENTERED')
         

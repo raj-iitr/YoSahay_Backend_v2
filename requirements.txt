@@ -1,11 +1,9 @@
 fastapi
-uvicorn
-openai
-requests
+uvicorn[standard]
 python-dotenv
-langchain-text-splitters
+openai
 chromadb
 langdetect
-regex 
-gspread          # <<<--- ADD THIS
-oauth2client 
+httpx
+gspread
+redis
