@@ -1,8 +1,19 @@
+# app/config.py
 import os
 from dotenv import load_dotenv
+import logging
 
-# Load environment variables from a .env file for local development
-load_dotenv()
+# --- Intelligent .env file loading ---
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(current_dir)
+dotenv_path = os.path.join(project_root, '.env')
+
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path=dotenv_path)
+    logging.info(f"Successfully loaded environment variables from: {dotenv_path}")
+else:
+    logging.warning(".env file not found. Relying on system environment variables.")
+
 
 # --- Core Application Settings ---
 class Settings:
@@ -24,9 +35,7 @@ class Settings:
     DISTANCE_THRESHOLD: float = 1.6
     TOP_K_RESULTS: int = 3
     
-    # Caching (Redis)
-    REDIS_URL: str = os.getenv("REDIS_URL") # Provided by Render.com
-    CACHE_EXPIRATION_SECONDS: int = 3600 # 1 hour
+    # --- [REMOVED] Redis settings are no longer here ---
     
     # Analytics (Google Sheets)
     GCP_SA_KEY_B64: str = os.getenv("GCP_SA_KEY_B64") # Base64 encoded service account key
@@ -42,12 +51,13 @@ class Settings:
 settings = Settings()
 
 # --- Basic validation ---
+# [REMOVED] settings.REDIS_URL is no longer checked here
 if not all([
     settings.WHATSAPP_ACCESS_TOKEN, 
     settings.WHATSAPP_VERIFY_TOKEN, 
     settings.WHATSAPP_PHONE_NUMBER_ID, 
     settings.OPENAI_API_KEY,
-    settings.REDIS_URL,
     settings.GCP_SA_KEY_B64
 ]):
-    raise ValueError("FATAL: One or more critical environment variables are missing.")
+    missing_vars = [var for var in ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_VERIFY_TOKEN", "WHATSAPP_PHONE_NUMBER_ID", "OPENAI_API_KEY", "GCP_SA_KEY_B64"] if not os.getenv(var)]
+    raise ValueError(f"FATAL: Critical environment variables are missing. Please check your .env file or system variables. Missing: {', '.join(missing_vars)}")

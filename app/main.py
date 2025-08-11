@@ -1,7 +1,8 @@
+# app/main.py
 import logging
 import httpx
 import chromadb
-import redis.asyncio as redis
+# import redis.asyncio as redis <-- REMOVED
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 from openai import OpenAI
 
@@ -20,13 +21,13 @@ logger = logging.getLogger(__name__)
 # --- Centralized Clients and App Initialization ---
 chroma_client = chromadb.Client()
 collection = chroma_client.get_or_create_collection(name=settings.CHROMA_COLLECTION_NAME)
-redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
+# redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True) <-- REMOVED
 openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
 app = FastAPI()
 
 # --- AI Helper Functions ---
 def classify_scheme_intent(query: str) -> str | None:
-    """Classifies the user's query to a specific scheme ID."""
+    # (This function remains unchanged)
     system_prompt = f"""You are an expert intent classifier. Your task is to identify which of the following government schemes a user is asking about. The available schemes are: {', '.join(settings.AVAILABLE_SCHEMES)}. Analyze the user's query. Respond with ONLY the single, most relevant scheme name from the list. If the query is ambiguous or not about any of the schemes, respond with ONLY the word 'none'. Do not add any explanation."""
     try:
         response = openai_client.chat.completions.create(
@@ -41,7 +42,7 @@ def classify_scheme_intent(query: str) -> str | None:
         return None
 
 def expand_query(query: str) -> str:
-    """Expands the user's query to improve search recall."""
+    # (This function remains unchanged)
     system_prompt = "You are a helpful assistant who rephrases a user's query to be more effective for a vector database search. Generate a single, more detailed question or a set of keywords that captures the core intent of the original query. Do not answer the question. Only provide the rephrased query."
     try:
         response = openai_client.chat.completions.create(
@@ -54,17 +55,14 @@ def expand_query(query: str) -> str:
         return expanded_query
     except Exception as e:
         logger.error(f"Error during query expansion: {e}")
-        return query # Fallback to original query
+        return query
 
 # --- Startup Event ---
 @app.on_event("startup")
 async def on_startup():
     load_data_into_chroma(collection)
-    try:
-        await redis_client.ping()
-        logger.info("Successfully connected to Redis.")
-    except Exception as e:
-        logger.error(f"FATAL: Could not connect to Redis. Caching will be disabled. Error: {e}")
+    # --- [REMOVED] The Redis connection check is gone ---
+    logger.info("YoSahay application startup complete.")
 
 # --- Background Task for Processing and Logging ---
 async def process_and_reply(user_phone: str, user_text: str, background_tasks: BackgroundTasks):
@@ -82,15 +80,8 @@ async def process_and_reply(user_phone: str, user_text: str, background_tasks: B
             await send_whatsapp_message(user_phone, reply)
             return
 
-        # --- Cache Check (Redis) ---
-        cached_reply = await redis_client.get(normalized_query)
-        if cached_reply:
-            logger.info(f"Cache HIT for query: '{normalized_query}'")
-            analytics_data.update({"CacheStatus": "HIT", "ResponseType": "CACHED"})
-            await send_whatsapp_message(user_phone, cached_reply)
-            return
-        
-        analytics_data["CacheStatus"] = "MISS"
+        # --- [REMOVED] The entire Redis cache check block is gone ---
+        analytics_data["CacheStatus"] = "DISABLED"
 
         # --- Start of RAG Pipeline ---
         lang = detect_lang(user_text)
@@ -117,19 +108,18 @@ async def process_and_reply(user_phone: str, user_text: str, background_tasks: B
             analytics_data.update({"ContextStatus": "FOUND", "ContextSource": top_scheme_source, "ResponseType": "AI_GENERATED"})
             final_reply = generate_response(user_text, chunks, lang)
         
-        # --- Cache the new result and send reply ---
-        await redis_client.set(normalized_query, final_reply, ex=settings.CACHE_EXPIRATION_SECONDS)
+        # --- [REMOVED] The call to cache the new result is gone ---
         await send_whatsapp_message(user_phone, final_reply)
 
     except Exception as e:
         analytics_data["ResponseType"] = "ERROR"
         logger.error(f"[BACKGROUND_TASK_ERROR] User={user_phone}, Details='{e}'", exc_info=True)
     finally:
-        # --- Log the complete analytics data to Google Sheets ---
         background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
 
 # --- Function to Send WhatsApp Message ---
 async def send_whatsapp_message(to: str, message: str):
+    # (This function remains unchanged)
     url = f"https://graph.facebook.com/v18.0/{settings.WHATSAPP_PHONE_NUMBER_ID}/messages"
     headers = {"Authorization": f"Bearer {settings.WHATSAPP_ACCESS_TOKEN}", "Content-Type": "application/json"}
     json_data = {"messaging_product": "whatsapp", "to": to, "type": "text", "text": {"body": message}}
@@ -146,6 +136,7 @@ async def send_whatsapp_message(to: str, message: str):
 # --- Webhook Endpoints ---
 @app.get("/")
 async def verify_webhook(request: Request):
+    # (This function remains unchanged)
     if (request.query_params.get("hub.mode") == "subscribe" and 
         request.query_params.get("hub.verify_token") == settings.WHATSAPP_VERIFY_TOKEN):
         logger.info("Webhook verified successfully!")
@@ -155,6 +146,7 @@ async def verify_webhook(request: Request):
 
 @app.post("/")
 async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
+    # (This function remains unchanged)
     try:
         payload = await request.json()
         if (payload.get("object") and payload.get("entry") and 
@@ -181,13 +173,13 @@ async def handle_webhook(request: Request, background_tasks: BackgroundTasks):
 async def health_check():
     try:
         item_count = collection.count()
-        redis_ping = await redis_client.ping()
+        # redis_ping = await redis_client.ping() <-- REMOVED
         return {
             "status": "ok",
             "message": "Server is running.",
             "chromadb_collection_name": collection.name,
             "items_in_collection": item_count,
-            "redis_connected": redis_ping
+            # "redis_connected": redis_ping <-- REMOVED
         }
     except Exception as e:
         logger.error(f"Health check failed: {e}", exc_info=True)
