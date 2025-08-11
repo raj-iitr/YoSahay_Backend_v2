@@ -26,20 +26,54 @@ openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
 app = FastAPI()
 
 # --- AI Helper Functions ---
+# In app/main.py, replace the existing classify_scheme_intent function with this one.
+
 def classify_scheme_intent(query: str) -> str | None:
-    # (This function remains unchanged)
-    system_prompt = f"""You are an expert intent classifier. Your task is to identify which of the following government schemes a user is asking about. The available schemes are: {', '.join(settings.AVAILABLE_SCHEMES)}. Analyze the user's query. Respond with ONLY the single, most relevant scheme name from the list. If the query is ambiguous or not about any of the schemes, respond with ONLY the word 'none'. Do not add any explanation."""
+    """Classifies the user's query to a specific scheme ID using a few-shot prompt."""
+    
+    # --- [UPGRADED FEW-SHOT PROMPT] ---
+    # This prompt gives the model concrete examples to learn from, making it
+    # much more accurate at handling both short names and out-of-scope queries.
+    system_prompt = f"""
+You are a PRECISE intent classification engine. Your ONLY task is to check if a user's query is about one of the following schemes: {', '.join(settings.AVAILABLE_SCHEMES)}.
+
+You MUST follow these examples to make your decision.
+
+--- EXAMPLES ---
+1.  Query: "kisan samman nidhi" -> Output: pm_kisan
+2.  Query: "ghar banane wali list" -> Output: pmayg
+3.  Query: "awas yojana" -> Output: pmayg
+4.  Query: "free gas cylinder" -> Output: pmuy
+5.  Query: "5 lakh ka bima" -> Output: pm_jay
+6.  Query: "fasal bima" -> Output: pmfby
+7.  Query: "kisan credit card" -> Output: none
+8.  Query: "pension" -> Output: none
+9.  Query: "business loan" -> Output: none
+10. Query: "scholarship" -> Output: none
+--- END OF EXAMPLES ---
+
+CRITICAL RULE: Analyze the user's query below. Based on the examples, respond with ONLY the single, most relevant scheme name from the list. If the query does not strongly match any of the schemes shown in the examples, you MUST respond with the single word 'none'.
+"""
     try:
         response = openai_client.chat.completions.create(
             model=settings.CLASSIFICATION_MODEL,
             messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": query}],
-            temperature=0, max_tokens=10
+            temperature=0,
+            max_tokens=10
         )
         result = response.choices[0].message.content.strip().lower()
-        return result if result in settings.AVAILABLE_SCHEMES else None
+        
+        # Final safety check
+        if result in settings.AVAILABLE_SCHEMES:
+            return result
+        else:
+            return None
+            
     except Exception as e:
         logger.error(f"Error during intent classification: {e}")
         return None
+
+# --- The rest of your app/main.py file remains exactly the same ---
 
 def expand_query(query: str) -> str:
     # (This function remains unchanged)
