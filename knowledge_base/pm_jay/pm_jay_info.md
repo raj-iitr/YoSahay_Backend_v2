@@ -1,110 +1,105 @@
-# 💬 Pradhan Mantri Jan Arogya Yojana (प्रधानमंत्री जन आरोग्य योजना) (आयुष्मान भारत योजना) (PM-JAY) (Ayushman yojna)
----
-
-## ❓ What is this scheme?/ Ye yojna kya hai? / यह योजना क्या है?
-
-**English**
-- Pradhan Mantri Jan Arogya Yojana (PM-JAY) (Ayushman Yojna) is a government initiative by Prime Minister Narendra Modi.
-- PM-JAY aims to provide universal access to quality hospital services for poor and vulnerable groups especially the needy without financial hardship.
-
-**Hindi**
-- प्रधानमंत्री जन आरोग्य योजना केंद्रीय सरकार द्वारा शुरू की गई एक अहम योजना है।
-- जन आरोग्य (आयुष्मान योजना) योजना का उद्देश्य गरीब और कमजोर समूहों, विशेषकर जरूरतमंदों को वित्तीय कठिनाई के बिना गुणवत्तापूर्ण अस्पताल सेवाओं तक सार्वभौमिक पहुंच प्रदान करना है।
-
-**Hinglish**
-- Pradhan Mantri Jan Arogya Yojna (PM-JAY / Ayushman) bharat ki kendriya sarkar dwara chalayi gyi ek zaruri yojna hai
-- Iska lakshya sabhi garib wa zaruratmando ko bina aarthik sahayta ke vishwa stariya swasthya sewa pradan krna hai
+# 💬 प्रधानमंत्री जन आरोग्य योजना (आयुष्मान भारत)
+# Common Names: Ayushman Bharat, PMJAY, Pradhan Mantri Jan Arogya Yojana, Ayushman Card, Modi wala health card, 5 lakh ka bima, 5 lakh wali scheme
 
 ---
 
-## ✅ Who is Eligible? / कौन पात्र है? / Iski patrta kya hai?
+### 🤔 Ye Scheme Kya Hai? (What is this scheme?)
 
-**English**
-- Under PM-JAY (Ayushman), all those families which are identified as **deprived rural families** and **urban worker occupational categories** under SECC (Socio Economic and Caste Census, 2011) data, are eligible.
-- The families with an active RSBY (Rasthriya Swasthya Bima Yojna) card as on 28/02/2018 are also eligible.
+**Hinglish:**
+Ye Modi ji ki sarkari scheme hai. Isme laabharthi parivar (eligible families) ko ek saal mein **₹5 lakh tak ka muft ilaaj** milta hai. Ye ilaaj sarkari aur is scheme se jude private aspataalon (hospitals) mein milta hai. Iska maksad hai ki paise ki kami se kisi ka ilaaj na ruke.
 
-**Hindi**
-- जन आरोग्य योजना (आयुष्मान योजना) के तहत, वे सभी परिवार पात्र हैं जिन्हें SECC (सामाजिक आर्थिक और जाति जनगणना, 2011) डेटा के तहत **वंचित ग्रामीण परिवारों** और **शहरी श्रमिक व्यावसायिक श्रेणियों** की सूची में रखा गया है।
-- 28/02/2018 तक सक्रिय RSBY (राष्ट्रीय स्वास्थ्य बीमा योजना) कार्ड वाले परिवार भी पात्र हैं।
-
-**Hinglish**
-- Ve sabhi pariwar jo ki SECC (Socio Economic and Caste Census, 2011) ki list mein **deprived rural families** aur **urban worker occupational categories** ke andar aate hai
-- 28/02/2018 tak active RSBY card (Rastriya Swasthya Bima Yojna) rakhnw wale log bhi apply kar sakte h
+**Shuddh Hindi:**
+यह एक सरकारी स्वास्थ्य बीमा योजना है। इसके तहत, पात्र परिवारों को प्रति वर्ष **₹5 लाख तक का मुफ़्त इलाज** प्रदान किया जाता है। यह इलाज सरकारी और योजना से जुड़े निजी अस्पतालों में उपलब्ध है। इसका उद्देश्य है कि कोई भी गरीब व्यक्ति पैसे की कमी के कारण इलाज से वंचित न रहे।
 
 ---
 
-## 💰 What are the Benefits? / क्या लाभ मिलेंगे?/ Kya fayde hai?
+### ✅ Scheme ke Fayde (Benefits of the Scheme)
 
-**English**
-- Under PM-JAY (Ayushman), health insurance cover up to **₹5 lakh per family per year** for secondary and tertiary hospitalization.
-- All **pre-existing conditions** covered from **day 1**.
-- Covers:
-  - Hospitalization expenses
-  - Day care surgeries
-  - Follow-up care
-  - Pre- and post-hospitalization expenses
-  - Services for newborn children
+**Hinglish:**
+*   Ek parivar ko ek saal mein **₹5 lakh tak ka free ilaaj**.
+*   Aspatal mein bharti hone ka kharcha, dawai, jaanch (tests) sab isme shaamil hai.
+*   Pehle se chali aa rahi bimariyan bhi pehle din se hi cover hoti hain.
+*   Parivar mein kitne bhi log hon, sabko iska fayda milega.
+*   Poore desh mein (jahan ye scheme laagoo hai) kahin bhi ilaaj kara sakte hain.
 
-**Hindi**
-- जन आरोग्य योजना (आयुष्मान योजना) के अंतरगत, अस्पताल में भर्ती के लिए प्रति परिवार प्रति वर्ष 5 लाख रुपये तक का स्वास्थ्य बीमा कवर दिया जाता है
-- इस योजना के अंतर्गत सभी पूर्व-मौजूदा स्थितियां भी पहले दिन से कवर की जाती हैं।
-- कवर करता है:
-  - अस्पताल में भर्ती होने का खर्च
-  - डे केयर सर्जरी
-  - अनुवर्ती देखभाल
-  - अस्पताल में भर्ती होने से पहले और बाद के खर्च
-  - नवजात शिशुओं के लिए सेवाएँ
-
-**Hinglish**
-- PM-JAY (Ayushman) mein asptal bharti hone k liye har ek parivaar ko 5 lakh/year tak ka loan diya jata hai
-- Isme phle se maujud swasthay bimariyon ko bhi cover kiya jata hai
-- Isme ye suvidhaye saamil hai 
-  - Hospital mein bharti hone ka kharcha
-  - Day care surgery
-  - Follow-ups
-  - Pre and post hospital bills
-  - Navjat sishu k liye sewa
-
----   
-
-## 📄 What Documents are Required? / ज़रूरी कागज़ क्या हैं? / Ilaaz k liye kaun kaun se kagaz lagenge?
-
-**English**
-Under PM-JAY (Ayushman Yojna), Ration card or any valid government photo ID (e.g., Aadhaar, Voter ID card, PAN card etc.)
-
-**Hindi**
-राशन कार्ड या कोई भी वैध सरकारी फोटो पहचान पत्र (जैसे, आधार, मतदाता पहचान पत्र, पैन कार्ड आदि)
-
-**Hinglish**
-Ration card ya koi bhi valid photo ID (Pan, AAdhar, Pahchan patr aadi)
+**Shuddh Hindi:**
+*   प्रति परिवार, प्रति वर्ष **₹5 लाख तक का मुफ़्त स्वास्थ्य बीमा**।
+*   अस्पताल में भर्ती होने का खर्च, दवाइयाँ, और जाँच सभी शामिल हैं।
+*   पहले से मौजूद बीमारियाँ भी पहले दिन से ही कवर की जाती हैं।
+*   परिवार के आकार या उम्र की कोई सीमा नहीं है।
+*   पूरे भारत में किसी भी पैनल में शामिल अस्पताल में कैशलेस इलाज की सुविधा।
 
 ---
 
-## 📝 How to Apply? / आवेदन कैसे करें? / Aavedan ki prikriya hai?
+### 🙋‍♂️ Kaun Laabh Utha Sakta Hai? (Who is Eligible?)
 
-**English**
-- PM-JAY (Ayushman Yojna) is **entitlement-based** — **no separate enrolment**.
-- Families identified via SECC (Socio Economic and Caste Census, 2011) deprivation/occupational data are automatically eligible.
+**Hinglish:**
+Sarkar ne 2011 mein ek list banayi thi (SECC 2011). Us list mein jin garib parivaron ke naam hain, wo iske laabharthi hain.
+*   **Gaon ke liye:** Jinke paas kachha makaan hai, parivar mein koi kamane wala purush nahi hai, ya jo anumati jaati/janjati (SC/ST) se hain, aadi.
+*   **Sheher ke liye:** Jo majdoori karte hain jaise kooda uthane wale, aavedan, aadi.
 
-**Hindi**
-- जन आरोग्य योजना (आयुष्मान योजना) के लिए कोई अलग से आवेदन करने की जरूरत नहीं है।
-- SECC (सामाजिक आर्थिक और जाति जनगणना, 2011) मैं अभाव/व्यावसायिक डेटा के माध्यम से पहचाने गए परिवार स्वतः ही पात्र हैं।
-
-**Hinglish**
-- Ayushman ya jan aarogya yojna k liye alag se apply karne ki koi zarurat nhi hai
-- SECC k data mein jo bhi pichde sehri ya gramin h wo automatically patra hai
+**Shuddh Hindi:**
+पात्रता सामाजिक-आर्थिक जाति जनगणना (SECC) 2011 के आंकड़ों पर आधारित है।
+*   **ग्रामीण क्षेत्रों में:** वंचित श्रेणियों के परिवार (जैसे कच्चा घर, परिवार में 16-59 आयु का कोई वयस्क पुरुष सदस्य नहीं, भूमिहीन परिवार आदि)।
+*   **शहरी क्षेत्रों में:** निर्दिष्ट व्यवसायों में काम करने वाले श्रमिक (जैसे कूड़ा बीनने वाले, घरेलू कामगार, फेरीवाले आदि)।
 
 ---
 
-## 📞 Contact & Official Links / संपर्क और आधिकारिक लिंक (शिकायत) / Sampark kaise karin (Ayushman or PM-JAY) / Sikayat 
+### 📄 Zaruri Documents (Documents Needed)
 
-**English** / **Hinglish**
-- Pradhan Mantri Jan Aarogya Yojna offical email id :- webmaster-pmjay@nha.gov.in
-- Toll-Free Call Center No. : 14555
+**Hinglish:**
+Aapko apni pehchan batane ke liye inme se koi ek document chahiye hoga:
+*   **Aadhaar Card** (सबसे ज़रूरी)
+*   Ration Card
+*   Voter ID Card
 
-**Hindi**
-- प्रधान मंत्री जन आरोग्य योजना आधिकारिक ईमेल आईडी :- webmaster-pmjay@nha.gov.in
-- टोल-फ्री कॉल सेंटर नं. :- 14555
+**Shuddh Hindi:**
+पात्रता की पुष्टि और eKYC के लिए एक मान्य फोटो पहचान पत्र आवश्यक है:
+*   **आधार कार्ड** (अनिवार्य)
+*   राशन कार्ड
+*   मतदाता पहचान पत्र
 
+---
 
+### 💳 Card Kaise Banwayein / Apna Naam Kaise Check Karein? (How to get the card / check your name?)
 
+**Hinglish:**
+Iske liye koi alag se form nahi bharna padta. Aapko bas ye check karna hai ki aapka naam list mein hai ya nahi.
+
+*   **Step 1: Naam Check Karein:** Aap official website **mera.pmjay.gov.in** par apna mobile number aur Ration Card/Aadhaar number daal kar check kar sakte hain. Ya 14555 par call karke pooch sakte hain.
+*   **Step 2: Card Banwayein:** Agar aapka naam list mein hai, to apna Aadhaar Card lekar paas ke **Sarkari Aspatal**, **Common Service Centre (जन सेवा केंद्र)**, ya is scheme se jude **Private Aspatal** mein jaayein.
+*   **Step 3: eKYC Karwayein:** Wahan aapka angootha (fingerprint) laga kar eKYC kiya jayega aur aapko 5 minute mein aapka **Ayushman Card** mil jayega.
+
+**Shuddh Hindi:**
+यह एक पात्रता-आधारित योजना है, जिसके लिए कोई आवेदन आवश्यक नहीं है।
+
+*   **चरण 1: पात्रता जांचें:** आधिकारिक वेबसाइट **mera.pmjay.gov.in** पर जाएं या हेल्पलाइन **14555** पर कॉल करें। अपना मोबाइल नंबर और विवरण दर्ज करके अपनी पात्रता की पुष्टि करें।
+*   **चरण 2: कार्ड प्राप्त करें:** यदि आप पात्र हैं, तो अपने आधार कार्ड के साथ किसी भी पैनल में शामिल अस्पताल या कॉमन सर्विस सेंटर (CSC) पर जाएँ।
+*   **चरण 3: eKYC प्रक्रिया:** वहां आपकी eKYC (बायोमेट्रिक सत्यापन) प्रक्रिया पूरी की जाएगी और आपको आपका आयुष्मान कार्ड तुरंत प्रदान कर दिया जाएगा।
+
+---
+
+### 🏥 Ilaaj Kahan Milega? (Where to get treatment?)
+
+**Hinglish:**
+Aap sabhi **sarkari aspataalon** mein aur is scheme se **jude hue private aspataalon** mein apna Ayushman Card dikha kar muft ilaaj pa sakte hain.
+
+**Shuddh Hindi:**
+आप सभी **सार्वजनिक अस्पतालों** और **पैनल में शामिल निजी अस्पतालों** में इस योजना का लाभ उठा सकते हैं।
+
+---
+
+### ‼️ Kuch Zaruri Baatein (Some Important Points)
+
+*   **Koi Paisa Nahi Dena:** Card banwane ke liye ya ilaaj ke liye aapko kisi ko bhi koi paisa nahi dena hai. Ye bilkul free hai.
+*   **Agent se Savdhan:** Kisi bhi agent ya dalal ke chakkar mein na padein. Seedhe aspataal ya CSC center jaayein.
+*   **Poore Desh Mein Maanya:** Agar aap UP ke hain aur Delhi ya Mumbai mein bimar padte hain, to wahan ke jude hue aspataal mein bhi aapka ilaaj ho jayega.
+
+---
+
+### 📞 Sampark / Helpline (Contact / Helpline)
+
+**Hinglish / Hindi:**
+Koi bhi jaankari ya shikayat ke liye, sarkari helpline number par call karein:
+*   **Toll-Free Number: 14555**
+*   Official Website: pmjay.gov.in

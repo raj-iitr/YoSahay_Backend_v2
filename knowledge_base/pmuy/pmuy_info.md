@@ -1,64 +1,95 @@
-#  PMUY – (Pradhan Mantri Ujjwala Yojana 2.0)
+# 🔥 प्रधानमंत्री उज्ज्वला योजना (PMUY)
+# Common Names: Ujjwala Yojana, Free gas cylinder, Modi wala gas, Gas wala form, Free chulha scheme
 
 ---
 
-##  What is PMUY (Ujjwala 2.0)?  
-**(PMUY kya hai?)**
+### 🤔 Ye Scheme Kya Hai? (What is this scheme?)
 
-- Launched by the Ministry of Petroleum and Natural Gas in **May 2016**, named **Pradhan Mantri Ujjwala Yojana (PMUY)**.
-- Objective: Provide **clean cooking fuel (saf swasthya jeevan ke liye swachh indhan)** like LPG to rural and deprived households using traditional fuels (wood, cow-dung, coal).
-- Scheme was launched by **Prime Minister Narendra Modi** on **1 May 2016** in Ballia, Uttar Pradesh.  
-- Targeted to distribute **8 crore LPG connections** to deprived households by March 2020.  
-- On **7 September 2019**, the **8th crore connection** was handed over in Aurangabad, Maharashtra.  
-- Under **Ujjwala 2.0**, an **additional 1.6 crore connections** (with special provision for migrant families) were added, achieving an overall total of **9.6 crore connections** by December 2022.  
-- Government has approved **75 lakh more connections**, taking the target to **10.35 crore connections**.  
-*(All data as per official records.)*
+**Hinglish:**
+Ye scheme unn garib parivaron ki mahilaon ke liye hai jo abhi bhi khana pakane ke liye lakdi, gobar ke uple ya koyle ka istemal karti hain. Is dhuein se sehat ko bohot nuksan hota hai. Isliye, sarkar aisi mahilaon ko swasth aur saaf suthra jeevan dene ke liye **muft mein gas connection** de rahi hai.
+
+**Shuddh Hindi:**
+यह योजना उन गरीब परिवारों की महिलाओं के लिए है जो पारंपरिक ईंधन जैसे लकड़ी या उपले पर खाना बनाती हैं। इस धुएं से होने वाले स्वास्थ्य नुकसान से बचाने के लिए, सरकार स्वच्छ और स्वस्थ जीवन प्रदान करने हेतु **निःशुल्क एलपीजी गैस कनेक्शन** वितरित कर रही है।
 
 ---
 
-##  What are the key benefits of PMUY?  
-**(PMUY ke mukhya laabh kya hain?)**
+### 🎉 Scheme Mein Kya-Kya Free Milta Hai? (What do you get for free?)
 
-- Government provides **cash assistance** for PMUY connection items:
-  - **₹1,600** for a **14.2 kg cylinder**, **₹1,150** for a **5 kg cylinder**
-  - Covers:
-    - Security Deposit: ₹1,250 (14.2 kg) / ₹800 (5 kg)
-    - Pressure Regulator: ₹150
-    - LPG Hose: ₹100
-    - Gas Consumer Card: ₹25
-    - Installation/Demonstration charges: ₹75
-- Additionally, beneficiaries receive a **free stove (hotplate)** and **first LPG refill**, along with the **deposit-free connection** from the OMC.
+**Hinglish:**
+Ujjwala Yojana ke tehat, aapko ye sab cheezein **bilkul muft** milti hain:
+*   **Gas Connection:** Iske liye koi deposit nahi dena padta.
+*   **Gas Stove (चूल्हा):** Ek gas ka chulha bhi free milta hai.
+*   **Pehla Cylinder:** Pehla gas cylinder bhi **bhara hua** free milta hai.
 
----
-
-##  What are PMUY’s eligibility criteria?  
-**(PMUY ke liye kya patrata hoti hai?)**
-
-- Applicant must be an **adult woman (18+ years)** from any of these categories:
-  - SC/ST households
-  - Pradhan Mantri Awas Yojana (Gramin)
-  - Most Backward Classes
-  - Antyodaya Anna Yojana (AAY)
-  - Tea and ex-tea garden tribes
-  - Forest dwellers
-  - Residents of islands or river islands
-  - SECC households (AHL TIN)
-  - Poor households via **14-point self-declaration**
-
-- One household must not already have an **existing LPG connection**.
+**Shuddh Hindi:**
+उज्ज्वला योजना के अंतर्गत, आपको निम्नलिखित वस्तुएं **पूरी तरह निःशुल्क** प्रदान की जाती हैं:
+*   **गैस कनेक्शन** (कोई सिक्योरिटी डिपॉजिट नहीं)।
+*   **एक गैस स्टोव (चूल्हा)**।
+*   **पहला भरा हुआ गैस सिलेंडर**।
 
 ---
 
-##  What documents are required?  
-**(Kaun se kagaz chahiye?)**
+### ✅ Kaun Laabh Utha Sakta Hai? (Who is Eligible?)
 
-1. KYC with photograph and signature  
-2. Ration card or state-issued document confirming family composition / self-declaration (Annexure I for migrants)  
-3. Aadhaar of applicant and adult family members in documents  
-4. Aadhaar serves as both **proof of identity** and **address** (if current address matches)  
-5. Bank account number and IFSC for subsidy or records
+**Hinglish:**
+Iska laabh lene ke liye ye sharatein hain:
+1.  Aavedak (applicant) ek **mahila honi chahiye** jiski umar 18 saal se zyada ho.
+2.  Uske parivar mein pehle se **koi aur LPG/gas connection nahi hona chahiye**.
+3.  Mahila inmein se kisi ek category mein aani chahiye:
+    *   Anusuchit Jaati / Janjaati (SC/ST) parivar
+    *   Pradhan Mantri Awas Yojana (Gramin) ke laabharthi
+    *   Antyodaya Anna Yojana (AAY) ke laabharthi
+    *   Ya anya pichhde varg
+
+**Agar aapka naam upar kisi list mein nahi hai:** To bhi aap ek **14-point ka declaration form** bharkar apply kar sakti hain, jisme aap ye batati hain ki aapka parivar garib hai.
+
+**Shuddh Hindi:**
+पात्रता के लिए निम्नलिखित शर्तें हैं:
+1.  आवेदक एक **18 वर्ष से अधिक आयु की महिला** होनी चाहिए।
+2.  परिवार में पहले से कोई अन्य **एलपीजी कनेक्शन नहीं होना चाहिए**।
+3.  आवेदक को指定 श्रेणियों में से एक से संबंधित होना चाहिए, जैसे कि एससी/एसटी परिवार, पीएम आवास योजना (ग्रामीण) के लाभार्थी, आदि।
+
+**यदि आप किसी सूची में नहीं हैं:** तो भी आप एक **14-सूत्रीय घोषणा पत्र** भरकर आवेदन कर सकती हैं, जिसमें आप यह प्रमाणित करती हैं कि आपका परिवार एक गरीब परिवार है।
 
 ---
 
-✅ **PMUY aims to ensure clean cooking fuel access to India’s most disadvantaged women, improving health and living standards.**  
-*(PMUY ka uddeshya hai ki garib mahilaon ko saf swasthya indhan mil sake, taaki unka jeevan swasth aur behtar ho.)*
+### 📝 Kaise Apply Karein? (How to Apply?)
+
+**Hinglish:**
+Aap apne nazdeeki in jagahon par jaakar form bhar sakti hain:
+*   **Apni Gas Agency par:** Jo bhi gas agency (Indane, HP, Bharat Gas) aapke sabse paas ho.
+*   **Jan Seva Kendra (CSC) par:** Aapke gaon/kasbe ka Jan Seva Kendra.
+
+Aap online bhi PMUY ki website se apply kar sakti hain.
+
+**Shuddh Hindi:**
+आप निम्नलिखित स्थानों पर जाकर आवेदन कर सकती हैं:
+*   **निकटतम एलपीजी वितरक (गैस एजेंसी)** के कार्यालय में।
+*   **निकटतम जन सेवा केंद्र (CSC)** पर।
+
+ऑनलाइन आवेदन पीएमयूवाई की आधिकारिक वेबसाइट के माध्यम से भी किया जा सकता है।
+
+---
+
+### 📄 Zaruri Kagaz (Documents Needed)
+
+Form bharte samay ye kagaz apne saath le jaayein:
+*   **Aapka Aadhaar Card** (Applicant ka).
+*   **Aapka Bank Account Passbook** (Naam aur IFSC code saaf ho).
+*   **Ration Card** ya koi aisa sarkari kagaz jisme aapke parivar ke sabhi sadasyon ke naam likhe hon.
+*   Parivar ke sabhi bade (adult) sadasyon ke **Aadhaar Card ki copy**.
+
+---
+
+### ‼️ Kuch Aur Zaruri Baatein (Other Important Points)
+
+*   **Connection Mahila ke Naam Par:** Ye connection hamesha parivar ki mahila ke naam par hi jaari kiya jaata hai.
+*   **Pravasi Mazdoor bhi Patra:** Jo log kaam ke liye dusre sheher gaye hain, wo bhi is scheme mein apply kar sakte hain.
+*   **Chhota ya Bada Cylinder:** Aap apni zaroorat ke hisaab se 5 kg wala chhota cylinder ya 14.2 kg wala bada cylinder le sakti hain.
+
+---
+
+### 📞 Sampark / Helpline (Contact / Helpline)
+
+*   **Ujjwala Helpline:** 1800-266-6696 (Toll-Free)
+*   **LPG Emergency Helpline:** 1906
