@@ -6,5 +6,6 @@ chromadb
 langdetect
 httpx
 gspread
-redis
-langchain-text-splitter
+
+# The text splitter now comes from the main langchain package
+langchain```
