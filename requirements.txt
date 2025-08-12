@@ -8,4 +8,4 @@ httpx
 gspread
 
 # The text splitter now comes from the main langchain package
-langchain```
+langchain
