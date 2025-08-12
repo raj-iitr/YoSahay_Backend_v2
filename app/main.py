@@ -28,28 +28,37 @@ app = FastAPI()
 # --- AI Helper Functions ---
 # In app/main.py, replace the existing classify_scheme_intent function with this one.
 
+# In app/main.py, replace the existing classify_scheme_intent function with this one.
+
 def classify_scheme_intent(query: str) -> str | None:
-    """Classifies the user's query to a specific scheme ID using a few-shot prompt."""
+    """Classifies the user's query to a specific scheme ID using a definitive few-shot prompt."""
     
-    # --- [UPGRADED FEW-SHOT PROMPT] ---
-    # This prompt gives the model concrete examples to learn from, making it
-    # much more accurate at handling both short names and out-of-scope queries.
+    # --- [LAUNCH CANDIDATE PROMPT V4.0 - FINAL] ---
     system_prompt = f"""
-You are a PRECISE intent classification engine. Your ONLY task is to check if a user's query is about one of the following schemes: {', '.join(settings.AVAILABLE_SCHEMES)}.
+You are a PRECISE intent classification engine. Your ONLY task is to check if a user's query is clearly and explicitly about one of the following government schemes: {', '.join(settings.AVAILABLE_SCHEMES)}.
 
 You MUST follow these examples to make your decision.
 
 --- EXAMPLES ---
+# Positive Matches (What to look for)
 1.  Query: "kisan samman nidhi" -> Output: pm_kisan
-2.  Query: "ghar banane wali list" -> Output: pmayg
-3.  Query: "awas yojana" -> Output: pmayg
-4.  Query: "free gas cylinder" -> Output: pmuy
-5.  Query: "5 lakh ka bima" -> Output: pm_jay
-6.  Query: "fasal bima" -> Output: pmfby
-7.  Query: "kisan credit card" -> Output: none
-8.  Query: "pension" -> Output: none
-9.  Query: "business loan" -> Output: none
-10. Query: "scholarship" -> Output: none
+2.  Query: "awas yojana" -> Output: pmayg
+3.  Query: "ghar banane wali list" -> Output: pmayg
+4.  Query: "ayushman card" -> Output: pm_jay
+5.  Query: "modi ji ki swasthya yojana" -> Output: pm_jay
+6.  Query: "5 lakh ka bima" -> Output: pm_jay
+7.  Query: "fasal bima" -> Output: pmfby
+8.  Query: "crop insurance ka claim" -> Output: pmfby
+9.  Query: "ujjwala yojana" -> Output: pmuy
+10. Query: "ujwala scheme" -> Output: pmuy
+11. Query: "free gas cylinder" -> Output: pmuy
+
+# Negative Matches (What to reject)
+12. Query: "kisan credit card" -> Output: none
+13. Query: "pension" -> Output: none
+14. Query: "business loan" -> Output: none
+15. Query: "scholarship" -> Output: none
+16. Query: "sarkari yojana" -> Output: none
 --- END OF EXAMPLES ---
 
 CRITICAL RULE: Analyze the user's query below. Based on the examples, respond with ONLY the single, most relevant scheme name from the list. If the query does not strongly match any of the schemes shown in the examples, you MUST respond with the single word 'none'.
@@ -63,7 +72,6 @@ CRITICAL RULE: Analyze the user's query below. Based on the examples, respond wi
         )
         result = response.choices[0].message.content.strip().lower()
         
-        # Final safety check
         if result in settings.AVAILABLE_SCHEMES:
             return result
         else:
@@ -73,6 +81,7 @@ CRITICAL RULE: Analyze the user's query below. Based on the examples, respond wi
         logger.error(f"Error during intent classification: {e}")
         return None
 
+# --- The rest of your app/main.py file remains exactly the same ---
 # --- The rest of your app/main.py file remains exactly the same ---
 
 def expand_query(query: str) -> str:

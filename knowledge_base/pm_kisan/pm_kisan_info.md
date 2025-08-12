@@ -112,6 +112,26 @@ Aapka form jama hua ya nahi, aur paisa aaya ya nahi, ye jaanne ke liye:
 
 ---
 
+
+### 🗓️ Kist Kab Aati Hai? (When is the installment released?)
+
+**Hinglish:** PM-KISAN ki kiston ki koi fix tarikh nahi hoti hai. Saal mein 3 kistein aati hain:
+*   **Pehli Kist (Apr-Jul):** April se July ke beech
+*   **Doosri Kist (Aug-Nov):** August se November ke beech
+*   **Teesri Kist (Dec-Mar):** December se March ke beech
+
+Sahi tarikh ki ghoshna sarkar media aur PM-KISAN portal ke zariye karti hai.
+
+**Shuddh Hindi:** पीएम-किसान की किस्तों की कोई निश्चित तारीख नहीं होती है। वर्ष में 3 किस्तें आती हैं:
+*   **प्रथम किस्त (अप्रैल-जुलाई):** अप्रैल से जुलाई के मध्य
+*   **द्वितीय किस्त (अगस्त-नवंबर):** अगस्त से नवंबर के मध्य
+*   **तृतीय किस्त (दिसंबर-मार्च):** दिसंबर से मार्च के मध्य
+
+सही तारीख की घोषणा सरकार द्वारा मीडिया और पीएम-किसान पोर्टल के माध्यम से की जाती है।
+
+---
+
+
 ### 📞 Sampark / Helpline (Contact / Helpline)
 
 **Hinglish / Hindi:**

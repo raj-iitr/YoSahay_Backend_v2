@@ -1,3 +1,5 @@
+#app/detector.py
+
 from langdetect import detect
 
 def detect_lang(text: str) -> str:
