@@ -26,9 +26,49 @@ openai_client = OpenAI(api_key=settings.OPENAI_API_KEY)
 app = FastAPI()
 
 # --- AI Helper Functions ---
-# In app/main.py, replace the existing classify_scheme_intent function with this one.
 
-# In app/main.py, replace the existing classify_scheme_intent function with this one.
+# --- [NEW] The Conversational Brain ---
+def handle_conversational_query(query: str) -> str | None:
+    """
+    Detects and handles non-informational, conversational queries with friendly, pre-defined responses.
+    Returns a response string if it's a conversational query, otherwise returns None.
+    """
+    system_prompt = f"""
+You are a classification system for a helpful government schemes bot. Your job is to categorize the user's query into one of the following types:
+- `BROAD_QUERY`: User is asking a very general, open-ended question about schemes (e.g., "tell me about schemes", "what do you know?").
+- `CHALLENGE`: User is questioning the bot's ability or knowledge (e.g., "do you even have info?", "are you smart?").
+- `FRUSTRATION`: User is expressing anger, frustration, or giving up (e.g., "you're useless", "forget it", "chod dijiye").
+- `IRRELEVANT`: The query is complete nonsense or unrelated to anything (e.g., "ouch", "what is the color of the sky?").
+- `INFORMATION_REQUEST`: The query is a standard request for information about a government scheme.
+
+Respond with ONLY one of the category names above.
+"""
+    try:
+        response = openai_client.chat.completions.create(
+            model=settings.CLASSIFICATION_MODEL,
+            messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": query}],
+            temperature=0, max_tokens=20
+        )
+        category = response.choices[0].message.content.strip()
+
+        available_schemes_str = ", ".join(s.replace('_', ' ').title() for s in settings.AVAILABLE_SCHEMES)
+
+        if category == "BROAD_QUERY":
+            return f"नमस्ते! मैं उत्तर प्रदेश की सरकारी योजनाओं के बारे में जानकारी देने के लिए यहाँ हूँ। मेरे पास वर्तमान में इन योजनाओं की जानकारी है: {available_schemes_str}। आप किसी विशेष योजना का नाम लिखकर उसके बारे में पूछ सकते हैं।"
+        elif category == "CHALLENGE":
+            return "जी, मेरे पास कई सरकारी योजनाओं की जानकारी है। आप बस योजना का नाम बताएं, मैं आपको उसके बारे में बताने की पूरी कोशिश करूँगा। उदाहरण के लिए, आप 'पीएम किसान' या 'आयुष्मान कार्ड' के बारे में पूछ सकते हैं।"
+        elif category == "FRUSTRATION":
+            return "माफ़ कीजिए अगर मैं आपकी मदद नहीं कर पाया। मैं अभी सीख रहा हूँ और मेरे पास केवल कुछ चुनिंदा योजनाओं की ही जानकारी है। शायद आप अपना प्रश्न किसी और तरह से पूछ सकते हैं? मैं केवल सरकारी योजनाओं के बारे में ही जानकारी दे सकता हूँ।"
+        elif category == "IRRELEVANT":
+            return "माफ़ कीजिए, मैं आपका प्रश्न समझ नहीं पाया। कृपया केवल सरकारी योजनाओं से संबंधित प्रश्न ही पूछें, जैसे 'आवास योजना के लिए पात्रता क्या है?'।"
+        else:
+            # It's a normal information request, so let the main pipeline handle it.
+            return None
+            
+    except Exception:
+        # If the classification fails for any reason, let the main pipeline handle it.
+        return None
+
 
 def classify_scheme_intent(query: str) -> str | None:
     """Classifies the user's query to a specific scheme ID using a definitive few-shot prompt."""
@@ -81,8 +121,6 @@ CRITICAL RULE: Analyze the user's query below. Based on the examples, respond wi
         logger.error(f"Error during intent classification: {e}")
         return None
 
-# --- The rest of your app/main.py file remains exactly the same ---
-# --- The rest of your app/main.py file remains exactly the same ---
 
 def expand_query(query: str) -> str:
     # (This function remains unchanged)
@@ -159,6 +197,68 @@ async def process_and_reply(user_phone: str, user_text: str, background_tasks: B
         logger.error(f"[BACKGROUND_TASK_ERROR] User={user_phone}, Details='{e}'", exc_info=True)
     finally:
         background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
+
+#[UPGRADED] The Main Logic Pipeline ---
+async def process_and_reply(user_phone: str, user_text: str, background_tasks: BackgroundTasks):
+    analytics_data = {"UserID": user_phone, "QueryText": user_text}
+    
+    try:
+        normalized_query = user_text.lower().strip()
+
+        # --- Step 1: Handle Small Talk (Existing) ---
+        if normalized_query in settings.SMALL_TALK_WORDS:
+            analytics_data["ResponseType"] = "SMALL_TALK"
+            reply = "नमस्ते! आप किसी भी सरकारी योजना के बारे में पूछ सकते हैं।"
+            if normalized_query in {"shukriya", "dhanyavaad", "thank you", "thanks"}:
+                reply = "आपकी सेवा करके हमें खुशी हुई!"
+            await send_whatsapp_message(user_phone, reply)
+            background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
+            return
+
+        # --- Step 2: [NEW] Handle Conversational Queries ---
+        conversational_reply = handle_conversational_query(user_text)
+        if conversational_reply:
+            logger.info(f"Handled as a conversational query. Type: Broad/Challenge/Frustration etc.")
+            analytics_data["ResponseType"] = "CONVERSATIONAL_GUIDANCE"
+            await send_whatsapp_message(user_phone, conversational_reply)
+            background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
+            return
+
+        # --- Step 3: Proceed with the RAG Pipeline (If not conversational) ---
+        analytics_data["CacheStatus"] = "DISABLED"
+        lang = detect_lang(user_text)
+        analytics_data["Language"] = lang
+        
+        detected_scheme = classify_scheme_intent(normalized_query)
+        analytics_data["IntentScheme"] = detected_scheme
+        logger.info(f"AI classified scheme intent: {detected_scheme}")
+
+        expanded_query = expand_query(user_text)
+        query_vector = embed_text(expanded_query)
+        
+        results = search_chunks(collection, query_vector, scheme_filter=detected_scheme, top_k=settings.TOP_K_RESULTS)
+        
+        best_distance = results['distances'][0][0] if results.get('distances') and results['distances'][0] else 2.0
+        analytics_data["RelevanceDistance"] = best_distance
+        
+        if best_distance > settings.DISTANCE_THRESHOLD:
+            analytics_data.update({"ContextStatus": "NOT_FOUND_THRESHOLD", "ResponseType": "FALLBACK"})
+            final_reply = generate_response(user_text, [], lang) 
+        else:
+            chunks = results['documents'][0] if results.get('documents') else []
+            top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown') if results.get('metadatas') else 'unknown'
+            analytics_data.update({"ContextStatus": "FOUND", "ContextSource": top_scheme_source, "ResponseType": "AI_GENERATED"})
+            final_reply = generate_response(user_text, chunks, lang)
+        
+        await send_whatsapp_message(user_phone, final_reply)
+
+    except Exception as e:
+        analytics_data["ResponseType"] = "ERROR"
+        logger.error(f"[BACKGROUND_TASK_ERROR] User={user_phone}, Details='{e}'", exc_info=True)
+    finally:
+        background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
+
+
 
 # --- Function to Send WhatsApp Message ---
 async def send_whatsapp_message(to: str, message: str):
