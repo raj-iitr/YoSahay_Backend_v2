@@ -146,58 +146,6 @@ async def on_startup():
     logger.info("YoSahay application startup complete.")
 
 # --- Background Task for Processing and Logging ---
-async def process_and_reply(user_phone: str, user_text: str, background_tasks: BackgroundTasks):
-    analytics_data = {"UserID": user_phone, "QueryText": user_text}
-    
-    try:
-        normalized_query = user_text.lower().strip()
-
-        # --- Small Talk Filter ---
-        if normalized_query in settings.SMALL_TALK_WORDS:
-            analytics_data["ResponseType"] = "SMALL_TALK"
-            reply = "Namaste! Sarkari yojanaon ke baare mein jaankari ke liye apna prashn likhein."
-            if normalized_query in {"thanks", "thank you", "shukriya", "dhanyavaad"}:
-                reply = "Aapka swagat hai!"
-            await send_whatsapp_message(user_phone, reply)
-            return
-
-        # --- [REMOVED] The entire Redis cache check block is gone ---
-        analytics_data["CacheStatus"] = "DISABLED"
-
-        # --- Start of RAG Pipeline ---
-        lang = detect_lang(user_text)
-        analytics_data["Language"] = lang
-        
-        detected_scheme = classify_scheme_intent(normalized_query)
-        analytics_data["IntentScheme"] = detected_scheme
-        logger.info(f"AI classified scheme intent: {detected_scheme}")
-
-        expanded_query = expand_query(user_text)
-        query_vector = embed_text(expanded_query)
-        
-        results = search_chunks(collection, query_vector, scheme_filter=detected_scheme, top_k=settings.TOP_K_RESULTS)
-        
-        best_distance = results['distances'][0][0] if results.get('distances') and results['distances'][0] else 2.0
-        analytics_data["RelevanceDistance"] = best_distance
-        
-        if best_distance > settings.DISTANCE_THRESHOLD:
-            analytics_data.update({"ContextStatus": "NOT_FOUND_THRESHOLD", "ResponseType": "FALLBACK"})
-            final_reply = generate_response(user_text, [], lang) 
-        else:
-            chunks = results['documents'][0] if results.get('documents') else []
-            top_scheme_source = results['metadatas'][0][0].get('scheme', 'unknown') if results.get('metadatas') else 'unknown'
-            analytics_data.update({"ContextStatus": "FOUND", "ContextSource": top_scheme_source, "ResponseType": "AI_GENERATED"})
-            final_reply = generate_response(user_text, chunks, lang)
-        
-        # --- [REMOVED] The call to cache the new result is gone ---
-        await send_whatsapp_message(user_phone, final_reply)
-
-    except Exception as e:
-        analytics_data["ResponseType"] = "ERROR"
-        logger.error(f"[BACKGROUND_TASK_ERROR] User={user_phone}, Details='{e}'", exc_info=True)
-    finally:
-        background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
-
 #[UPGRADED] The Main Logic Pipeline ---
 async def process_and_reply(user_phone: str, user_text: str, background_tasks: BackgroundTasks):
     analytics_data = {"UserID": user_phone, "QueryText": user_text}
@@ -214,7 +162,7 @@ async def process_and_reply(user_phone: str, user_text: str, background_tasks: B
             await send_whatsapp_message(user_phone, reply)
             background_tasks.add_task(log_analytics_event, analytics_data=analytics_data)
             return
-
+ 
         # --- Step 2: [NEW] Handle Conversational Queries ---
         conversational_reply = handle_conversational_query(user_text)
         if conversational_reply:
